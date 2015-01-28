@@ -1,0 +1,7 @@
+table#weekend-report td{
+  font-size: 1.4em;
+}
+
+table#weekend-report tr.program-names {
+  font-size: 4.5em;
+}
