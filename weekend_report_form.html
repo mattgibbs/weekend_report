@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <link href="bootstrap/css/bootstrap.min.css" media="all" rel="stylesheet"></link>
+    <link href="table.css" media="all" rel="stylesheet"></link>
+    <script src="d3/d3.min.js" charset="utf-8"></script>
+    <script src="colorbrewer.js" charset="utf-8"></script>
+    <script src="pie.js" charset="utf-8"></script>
+    <script src="jquery.min.js" charset="utf-8"></script>
+    <script src="form.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12"><h3>Weekend Report for <b>Friday, January 23rd</b> through <b>Sunday, January 26th, 2015</b>.</h3></div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <table class="table" id="weekend-report">
+            <tr class="program-names">
+              <th></th>
+              <th><input value="XPP"></th>
+              <th><a href="#" id="add-program" class="btn btn-default">Add another program</a></th>
+            </tr>
+            <tr class="times">
+              <th></th>
+              <td><input value="21:00 - 09:00"></td>
+            </tr>
+            <tr class="configurations">
+              <th>Configuration</th>
+              <td><textarea>6000 eV to 9500 eV SASE.</textarea></td>
+            </tr>
+            <tr class="performance">
+              <th>Performance</th>
+              <td><textarea>2 mJ, tuned for minimum jitter.</textarea></td>
+            </tr>
+            <tr class="uptime">
+              <th>Uptime</th>
+              <td>
+                <ul class="list-unstyled">
+                  <li><input value="" placeholder="Downtime"> hours</li>
+                  <li><input value="" placeholder="Config Changes"> hours</li>
+                  <li><input value="" placeholder="Delivered"> hours</li>
+                </ul>
+              </td>
+            </tr>
+            <tr class="downtime-events">
+              <th>Events</th>
+              <td>
+                <ul class="list-unstyled">
+                  <li>
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <textarea rows="4">5.5 hours downtime on Saturday when SXRSS M3X mirror failed to retract due to a broken motor.</textarea>
+                      </div>
+                      <div class="col-xs-6">
+                        <a href="#" class="delete-event btn btn-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                      </div>
+                    </div>
+                  </li>
+                  <li><a href="#" class="new-event btn btn-default">Add another event</a></li>
+                </ul>
+              </td>
+            </tr>
+            <tr class="delete-buttons">
+              <td></td>
+              <td><a href="#" class="btn btn-danger">Remove Program</a></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div><!-- end row with table -->
+  </body><!-- end container -->
+</html>

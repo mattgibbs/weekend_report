@@ -5,3 +5,7 @@ table#weekend-report td{
 table#weekend-report tr.program-names {
   font-size: 4.5em;
 }
+
+tr.program-names th input {
+  width: 4.2em;
+}
