@@ -11,7 +11,7 @@
     <script src="form.js" charset="utf-8"></script>
   </head>
   <body>
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-xs-12"><h3>Weekend Report for <b>Friday, January 23rd</b> through <b>Sunday, January 26th, 2015</b>.</h3></div>
       </div>
@@ -20,24 +20,35 @@
           <table class="table" id="weekend-report">
             <tr class="program-names">
               <th></th>
-              <th><input value="XPP"></th>
-              <th><a href="#" id="add-program" class="btn btn-default">Add another program</a></th>
+              <th data-program="0" class="choose-program">
+                <select>
+                  <option value="AMO">AMO</option>
+                  <option value="SXR">SXR</option>
+                  <option value="XPP">XPP</option>
+                  <option value="XCS">XCS</option>
+                  <option value="CXI">CXI</option>
+                  <option value="MEC">MEC</option>
+                  <option value="FACET">FACET</option>
+                  <option value="SPEAR3">SPEAR3</option>
+                </select>
+              </th>
+              <th><button id="add-program" class="btn btn-default">Add another program</button></th>
             </tr>
             <tr class="times">
               <th></th>
-              <td><input value="21:00 - 09:00"></td>
+              <td data-program="0"><input placeholder="Time Note" value="21:00 - 09:00"></td>
             </tr>
             <tr class="configurations">
               <th>Configuration</th>
-              <td><textarea>6000 eV to 9500 eV SASE.</textarea></td>
+              <td data-program="0"><textarea placeholder="Configuration">6000 eV to 9500 eV SASE.</textarea></td>
             </tr>
             <tr class="performance">
               <th>Performance</th>
-              <td><textarea>2 mJ, tuned for minimum jitter.</textarea></td>
+              <td data-program="0"><textarea placeholder="Performance Notes">2 mJ, tuned for minimum jitter.</textarea></td>
             </tr>
             <tr class="uptime">
               <th>Uptime</th>
-              <td>
+              <td data-program="0">
                 <ul class="list-unstyled">
                   <li><input value="" placeholder="Downtime"> hours</li>
                   <li><input value="" placeholder="Config Changes"> hours</li>
@@ -47,25 +58,18 @@
             </tr>
             <tr class="downtime-events">
               <th>Events</th>
-              <td>
+              <td data-program="0">
                 <ul class="list-unstyled">
                   <li>
-                    <div class="row">
-                      <div class="col-xs-6">
-                        <textarea rows="4">5.5 hours downtime on Saturday when SXRSS M3X mirror failed to retract due to a broken motor.</textarea>
-                      </div>
-                      <div class="col-xs-6">
-                        <a href="#" class="delete-event btn btn-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-                      </div>
-                    </div>
+                    <textarea rows="4">5.5 hours downtime on Saturday when SXRSS M3X mirror failed to retract due to a broken motor.</textarea>
                   </li>
-                  <li><a href="#" class="new-event btn btn-default">Add another event</a></li>
+                  <li><button class="new-event btn btn-default">Add another event</button></li>
                 </ul>
               </td>
             </tr>
             <tr class="delete-buttons">
               <td></td>
-              <td><a href="#" class="btn btn-danger">Remove Program</a></td>
+              <td data-program="0"><button data-program="0" class="remove-program disabled btn btn-danger">Remove Program</a></td>
             </tr>
           </table>
         </div>
