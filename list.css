@@ -1,0 +1,47 @@
+div#program-list-container {
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+ul.program-list {
+  list-style-type: none;
+  padding: 0px;
+  border-top: 1px solid #ddd;
+}
+
+ul.program-list > li {
+  float: left;
+  list-style-type: none;
+  width: 33%;
+  margin: 0px;
+  padding: 0px;
+}
+
+ul.program-list li.program ul.program-fields {
+  list-style-type: none;
+  padding: 0px;
+}
+
+ul.program-list ul.program-fields > li {
+  font-size: 1.4em;
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+}
+
+ul.program-list ul.program-fields > li.name {
+  font-size: 4.5em;
+  font-weight: bold;
+}
+
+ul.event-list {
+  list-style-type: none;
+  padding: 0px;
+}
+
+li.name select {
+  background-color: #FFFFFF;
+  border: 1px solid gray;
+}
+
+textarea {
+    resize: none;
+}

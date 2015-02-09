@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
     <link href="bootstrap/css/bootstrap.min.css" media="all" rel="stylesheet"></link>
-    <link href="table.css" media="all" rel="stylesheet"></link>
+    <link href="table-row.css" media="all" rel="stylesheet"></link>
     <script src="d3/d3.min.js" charset="utf-8"></script>
     <script src="colorbrewer.js" charset="utf-8"></script>
     <script src="pie.js" charset="utf-8"></script>
@@ -13,33 +13,20 @@
     <div class="container">
       <h3>Weekend Report for <b>Friday, January 23rd</b> through <b>Sunday, January 26th, 2015</b>.</h3>
       <table class="table" id="weekend-report">
-        <tr class="program-names">
-          <th></th>
-          <th class="program-name"><span>XPP</span></th>
-          <th class="program-name"><span>SXR</span></th>
-          <th class="program-name"><span>SPEAR3</span></th>
-        </tr>
-        <tr class="times">
-          <th></th>
-          <td>21:00 - 09:00</td>
-          <td>09:00 - 21:00</td>
-          <td>User Delivery</td>
-        </tr>
-        <tr class="configurations">
+        <tr class="headers">
+          <th>Program</th>
+          <th>Time</th>
           <th>Configuration</th>
-          <td>6000 eV to 9500 eV SASE.</td>
-          <td>530 eV seeded FEL, with BC1 horn cutting.</td>
-          <td>500 mA stored beam, with auto-fill every five minutes.</td>
-        </tr>
-        <tr class="performance">
           <th>Performance</th>
-          <td>2 mJ, tuned for minimum jitter.</td>
-          <td>Seeded intensity between 400 uJ and 700 uJ on the gas detector.</td>
-          <td>BTS toroid average around 80 pC, fill rate between 40 and 50 mA/minute.</td>
-        </tr>
-        <tr class="uptime">
           <th>Uptime</th>
-          <td>Fri-Sun uptime: 30.5 hours (84.7%)
+          <th>Notes</th>
+        </tr>
+        <tr data-program="0">
+          <td class="program-name">XPP</td>
+          <td class="time-note">21:00 - 09:00</td>
+          <td class="configuration">6000 eV to 9500 eV</td>
+          <td class="performance">2 mJ, tuned for minimum jitter.</td>
+          <td class="uptime">Fri-Sun uptime: 30.5 hours (84.7%)
             <div id="xpp-uptime">
               <script type="text/javascript">
           			//Width and height
@@ -50,7 +37,18 @@
               </script>
             </div>
           </td>
-          <td>Fri-Sun uptime: 35.8 hours (99.4%)
+          <td class="notes">
+            <ul class="list-unstyled">
+              <li>5.5 hours downtime on Saturday when SXRSS M3X mirror failed to retract due to a broken motor.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr data-program="1">
+          <td class="program-name">SXR</td>
+          <td class="time-note">09:00 - 21:00</td>
+          <td class="configuration">530 eV seeded FEL, with BC1 horn cutting.</td>
+          <td class="performance">Seeded intensity between 400 uJ and 700 uJ on the gas detector.</td>
+          <td class="uptime">Fri-Sun uptime: 35.8 hours (99.4%)
             <div id="sxr-uptime">
               <script type="text/javascript">
           			//Width and height
@@ -61,22 +59,20 @@
               </script>
             </div>
           </td>
-          <td>A handful of missed fills due to timing shifts.</td>
-        </tr>
-        <tr class="downtime-events">
-          <th>Events</th>
-          <td>
-            <ul class="list-unstyled">
-              <li>5.5 hours downtime on Saturday when SXRSS M3X mirror failed to retract due to a broken motor.</li>
-            </ul>
-          </td>
-          <td>
+          <td class="notes">
             <ul class="list-unstyled">
               <li>0.3 hours down on Friday when LI26 main manifold gauge tripped off on a low pressure fault.</li>
               <li>SXRSS M3X mirror failure meant users had to use SASE FEL rather than seeded beam on Sunday.</li>
             </ul>
           </td>
-          <td></td>
+        </tr>
+        <tr data-program="2">
+          <td class="program-name">SPEAR3</td>
+          <td class="time-note">User Delivery</td>
+          <td class="configuration">500 mA stored beam, with auto-fill every five minutes.</td>
+          <td class="performance">BTS toroid average around 80 pC, fill rate between 40 and 50 mA/minute.</td>
+          <td class="uptime">A handful of missed fills due to timing shifts, otherwise smooth delivery.</td>
+          <td class="notes"></td>
         </tr>
       </table>
     </div>
