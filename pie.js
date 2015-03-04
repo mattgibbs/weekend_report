@@ -31,7 +31,7 @@ function makePie(element, dataset, w, h) {
   //Draw arc paths
   arcs.append("path")
       .attr("fill", function(d, i) {
-      	return color(i);
+      	return color(d.data.title);
       })
       .attr("d", arc);
 
