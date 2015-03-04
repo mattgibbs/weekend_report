@@ -33,6 +33,10 @@ div.history-plot g.mg-y-axis text {
 	font-size: 0.8em;
 }
 
+div.history-plot h2.mg-chart-title {
+	margin-top: 0px;
+}
+
 div.program-notes table {
 	margin-bottom: 0.8em;
 }
