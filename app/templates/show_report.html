@@ -3,4 +3,44 @@
 <div id="heading" class="row">
 	<h3>Weekend Report for <b>{{report.start.strftime('%A, %B %d')}}</b> through <b>{{report.end.strftime('%A, %B %d %Y')}}</b>.</h3>
 </div>
+
+<div id="program-list-container" class="row">
+  {% for program in report.programs %}
+	<div class="program-row row">
+		<div class="program-notes col-sm-7">
+			<span class="program-name">{{ program.name }}</span>
+			<table>
+				<tr>
+					<th>Time</th>
+					<td>{{ program.time_note }}</td>
+				</tr>
+				<tr>
+					<th>Configuration</th>
+					<td>{{ program.config_note }}</td>
+				</tr>
+				<tr>
+					<th>Performance</th>
+					<td>{{ program.performance_note }}</td>
+				</tr>
+			</table>
+      <ul class="notes-list">
+        {% for note in program.other_notes %}
+        <li>{{ note.text }}</li>
+        {% endfor %}
+      </ul>
+		</div>
+		<div class="col-sm-5">
+      <div class="downtime-chart" id="{{ program.name }}-uptime">
+        <script type="text/javascript">
+    			//Width and height
+    			var w = 210;
+    			var h = 210;
+    			var dataset = [ {% if program.downtime_data.downtime > 0 %}{title: "Downtime", value: {{ program.downtime_data.downtime }} }, {% endif %}{% if program.downtime_data.config_changes > 0 %}{title: "Config Changes", value: {{ program.downtime_data.config_changes }} }, {% endif %}{% if program.downtime_data.delivered > 0 %}{title: "Delivered", value: {{ program.downtime_data.delivered }} } {% endif %} ];
+          makePie('div#{{ program.name }}-uptime',dataset,w,h);
+        </script>
+      </div>
+		</div>
+	</div>
+  {% endfor %}
+</div>
 {% endblock %}
