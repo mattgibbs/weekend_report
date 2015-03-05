@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="heading" class="row">
+	<h3>Weekend Report for <b>{{report.start.strftime('%A, %B %d')}}</b> through <b>{{report.end.strftime('%A, %B %d %Y')}}</b>.</h3>
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<ul class="report-list">
+{% for r in reports %}
+  <li>{{ r.start }} to {{ r.end }}</li>
+{% endfor %}
+</ul>
+{% endblock %}
