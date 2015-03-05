@@ -1,46 +1,100 @@
 {% extends "base.html" %}
 {% block content %}
 <div id="heading" class="row">
-	<h3>Weekend Report for <b>{{report.start.strftime('%A, %B %d')}}</b> through <b>{{report.end.strftime('%A, %B %d %Y')}}</b>.</h3>
+  <h3>Weekend Report for <b>{{report.start.strftime('%A, %B %d')}}</b> through <b>{{report.end.strftime('%A, %B %d %Y')}}</b>.</h3>
 </div>
 
 <div id="program-list-container" class="row">
   {% for program in report.programs %}
-	<div class="program-row row">
-		<div class="program-notes col-sm-7">
-			<span class="program-name">{{ program.name }}</span>
-			<table>
-				<tr>
-					<th>Time</th>
-					<td>{{ program.time_note }}</td>
-				</tr>
-				<tr>
-					<th>Configuration</th>
-					<td>{{ program.config_note }}</td>
-				</tr>
-				<tr>
-					<th>Performance</th>
-					<td>{{ program.performance_note }}</td>
-				</tr>
-			</table>
+  <div class="program-row row">
+    <div class="program-notes col-sm-7">
+      <span class="program-name">{{ program.name }}</span>
+      <table>
+        <tr>
+          <th>Time</th>
+          <td>{{ program.time_note }}</td>
+        </tr>
+        <tr>
+          <th>Configuration</th>
+          <td>{{ program.config_note }}</td>
+        </tr>
+        <tr>
+          <th>Performance</th>
+          <td>{{ program.performance_note }}</td>
+        </tr>
+      </table>
       <ul class="notes-list">
         {% for note in program.other_notes %}
         <li>{{ note.text }}</li>
         {% endfor %}
       </ul>
-		</div>
-		<div class="col-sm-5">
+    </div>
+    <div class="col-sm-5">
       <div class="downtime-chart" id="{{ program.name }}-uptime">
         <script type="text/javascript">
-    			//Width and height
-    			var w = 210;
-    			var h = 210;
-    			var dataset = [ {% if program.downtime_data.downtime > 0 %}{title: "Downtime", value: {{ program.downtime_data.downtime }} }, {% endif %}{% if program.downtime_data.config_changes > 0 %}{title: "Config Changes", value: {{ program.downtime_data.config_changes }} }, {% endif %}{% if program.downtime_data.delivered > 0 %}{title: "Delivered", value: {{ program.downtime_data.delivered }} } {% endif %} ];
+          //Width and height
+          var w = 210;
+          var h = 210;
+          var dataset = [ {% if program.downtime_data.downtime > 0 %}{title: "Downtime", value: {{ program.downtime_data.downtime }} }, {% endif %}{% if program.downtime_data.config_changes > 0 %}{title: "Config Changes", value: {{ program.downtime_data.config_changes }} }, {% endif %}{% if program.downtime_data.delivered > 0 %}{title: "Delivered", value: {{ program.downtime_data.delivered }} } {% endif %} ];
           makePie('div#{{ program.name }}-uptime',dataset,w,h);
         </script>
       </div>
-		</div>
-	</div>
+    </div>
+  </div>
+  {% endfor %}
+  {% for plot in report.history_plots %}
+  <div class="history-row row">
+    <div class="col-sm-12">
+      <div class="history-plot" id='history-{{ plot.id }}'>
+        <script type="text/javascript">
+        {% if plot.archiver_json %}
+          var data = {{ plot.archiver_json }};
+          var time_series = data[0].data.map(function(item) {
+            return {"date": new Date(item.secs * 1000), "val": item.val}; 
+          });
+          MG.data_graphic({
+            title: "Gas Detector History Over The Weekend",
+            data: time_series,
+            markers: [{% for event in plot.events %}
+              {'date': new Date('{{ event.timestamp.isoformat() }}'), 'label': '{{ event.text }}'},
+                      {% endfor %}],
+            width: 800,
+            full_width: true,
+            height: 260,
+            target: '#history-{{ plot.id }}',
+            x_accessor: 'date',
+            y_accessor: 'val',
+            min_x: time_series[0].date,
+            min_y: 0,
+            area: true
+          });
+          {% else %}
+          d3.json('http://lcls-archapp.slac.stanford.edu/retrieval/data/getData.json?pv=mean_360({{ plot.pv }})&from={{ plot.report.start.isoformat() }}.000Z&to={{plot.report.end.isoformat()}}.000Z', function(data) {
+            var time_series = data[0].data.map(function(item) {
+              return {"date": new Date(item.secs * 1000), "val": item.val};
+            });
+            MG.data_graphic({
+              title: "Gas Detector History Over The Weekend",
+              data: time_series,
+              markers: [{% for event in plot.events %}
+                {'date': new Date('{{ event.timestamp.isoformat() }}'), 'label': '{{ event.text }}'},
+                        {% endfor %}],
+              width: 800,
+              full_width: true,
+              height: 260,
+              target: '#history-{{ plot.id }}',
+              x_accessor: 'date',
+              y_accessor: 'val',
+              min_x: time_series[0].date,
+              min_y: 0,
+              area: true
+            });
+          });
+        {% endif %}
+        </script>
+      </div>
+    </div>
+  </div>
   {% endfor %}
 </div>
 {% endblock %}
