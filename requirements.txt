@@ -1,0 +1,7 @@
+flask==0.10.1
+sqlalchemy==0.9.6
+flask-wtf==0.9.5
+flask-migrate
+flask-sqlalchemy==1.0
+requests==2.5.0
+pytz
