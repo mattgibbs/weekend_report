@@ -49,3 +49,29 @@ div.program-notes table th {
 ul.notes-list {
 	padding-left: 0px;
 }
+
+a#add-program {
+  font-size: 1.2em;
+}
+
+a#save-report {
+  font-size: 1.2em;
+}
+
+div.downtime-inputs table th {
+	text-align: right;
+	padding-right: 0.8em;
+}
+
+div.downtime-inputs {
+  font-size: 1.2em;
+}
+
+input.name {
+  margin-bottom: 0.2em;
+}
+
+a.remove-program {
+  float: right;
+  font-size: 1.2em;
+}
