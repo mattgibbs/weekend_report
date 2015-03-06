@@ -50,11 +50,7 @@ ul.notes-list {
 	padding-left: 0px;
 }
 
-a#add-program {
-  font-size: 1.2em;
-}
-
-a#save-report {
+div.add {
   font-size: 1.2em;
 }
 

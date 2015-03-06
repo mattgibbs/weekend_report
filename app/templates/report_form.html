@@ -3,13 +3,14 @@
 <script src="{{ url_for('static', filename='form.js') }}" charset="utf-8"></script>
 <form method="post" name="report" role="form" id="report" action="{{ url_for('create_report') }}">
   <div id="heading" class="row">
-    <h3>New Weekend Report for <input name="start" type="date" placeholder="mm/dd/yyyy"> to <input name="end" type="date" placeholder="mm/dd/yyyy"></h3>
+    <h3>New Weekend Report for <input id="start" name="start" type="date" placeholder="mm/dd/yyyy"> to <input id="end" name="end" type="date" placeholder="mm/dd/yyyy"></h3>
   </div>
   <div id="program-list" class="row">
+    
   </div>
   <div class="add row">
     <div class="col-sm-12" style="text-align: right;">
-      <a id="add-program" href="#">Add another program</a> | <a id="save-report" href="#">Save report</a>
+      <a id="add-program" href="#">Add another program</a> | <a id="add-history-plot" href="#">Add a history plot</a> | <a id="save-report" href="#">Save report</a>
     </div>
   </div>
   <div id="blank-program" style="display: none;">
@@ -54,6 +55,25 @@
       </div>
       <div class="col-sm-1">
         <a href="#" class="remove-program">Remove</a>
+      </div>
+    </div>
+  </div>
+  
+  <div id="blank-history-plot" style="display: none;">
+    <div class="history-row row" >
+      <div class="col-sm-12">
+        <input class="plot-number" type="hidden" name="history_plot" value="">
+        <input name="pv-" placeholder="Enter a PV" size="40"> <a class="plot-pv" href="#">Plot PV</a>
+        <div class="add-event" style="display: none;">
+          <input class="event-text" name="" placeholder="Event Text"> 
+          <input class="event-timestamp" name="" placeholder="Feb 22, 2015 13:30:00">
+          <a class="add-event" href="#">Add Event</a>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="history-plot mg-main-area-solid" id='history-'>
+
+        </div>
       </div>
     </div>
   </div>
