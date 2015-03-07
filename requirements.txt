@@ -5,3 +5,4 @@ flask-migrate
 flask-sqlalchemy==1.0
 requests==2.5.0
 pytz
+python-dateutil==1.5
