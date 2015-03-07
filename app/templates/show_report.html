@@ -11,18 +11,24 @@
         <div class="program-notes col-sm-7">
           <span class="program-name">{{ report_item.name }}</span>
           <table>
+            {% if report_item.time_note %}
             <tr>
               <th>Time</th>
               <td>{{ report_item.time_note }}</td>
             </tr>
+            {% endif %}
+            {% if report_item.config_note %}
             <tr>
               <th>Configuration</th>
               <td>{{ report_item.config_note }}</td>
             </tr>
+            {% endif %}
+            {% if report_item.performance_note %}
             <tr>
               <th>Performance</th>
               <td>{{ report_item.performance_note }}</td>
             </tr>
+            {% endif %}
           </table>
           <ul class="notes-list">
             {% for note in report_item.other_notes %}
