@@ -5,7 +5,7 @@ from dateutil import parser
 
 @app.route('/')
 def root_index():
-	return redirect('report_index')
+	return redirect(url_for('report_index'))
   
 @app.route('/reports/')
 def report_index():
