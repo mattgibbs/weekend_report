@@ -58,7 +58,7 @@ function makePie(element, dataset, w, h) {
             .text(function(d) {
               return d.data.value + " hrs";
             });
-  //Space the labels out.  Fancy!
+  //Space the labels out.  Fancy!  Courtesy of http://jsfiddle.net/thudfactor/HdwTH/
   alpha = 3;
   spacing = 8;
 
