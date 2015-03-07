@@ -2,6 +2,7 @@
 $( window ).load(function() {
   //Program stuff
   var program_number = 0;
+  var ordering_number = 0;
   
   function addNewProgram() {
     var last_prog = $('div#program-list > div.program-row').last();
@@ -11,6 +12,9 @@ $( window ).load(function() {
       var oldname = $(this).attr("name");
       if (oldname === "program") {
         $(this).attr("value", program_number);
+      } else if (oldname === "program-order-") {
+        $(this).attr("name", oldname + program_number).val(ordering_number);
+        ordering_number = ordering_number + 1;
       } else {
         $(this).attr("name", oldname + program_number);
       }
@@ -58,6 +62,9 @@ $( window ).load(function() {
         $(this).attr("name", "plot[" + plot_number + "]event[0]-timestamp");
       } else if (oldname === "plot[]event") {
         $(this).attr("name", "plot[" + plot_number +"]event").val(plot_number);
+      } else if (oldname === "plot-order-") {
+        $(this).attr("name", oldname + plot_number).val(ordering_number);
+        ordering_number = ordering_number + 1;
       } else {
         $(this).attr("name", oldname + plot_number);
       }

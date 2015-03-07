@@ -54,6 +54,7 @@ def create_report():
       new_program.time_note = request.form['time_note-' + program_number]
       new_program.config_note = request.form['config_note-' + program_number]
       new_program.performance_note = request.form['performance_note-' + program_number]
+      new_program.display_order = int(request.form['program-order-' + program_number])
       other_notes = filter(None, request.form.getlist('other_note-' + program_number))
       for other_note in other_notes:
         new_note = models.Note()
@@ -73,6 +74,7 @@ def create_report():
       db.session.add(new_plot)
       new_plot.report = new_report
       new_plot.pv = request.form['pv-' + plot_number]
+      new_plot.display_order = int(request.form['plot-order-' + plot_number])
       events = request.form.getlist("plot[{0}]event".format(plot_number))
       for event_number in events:
         new_event = models.HistoryEvent()
