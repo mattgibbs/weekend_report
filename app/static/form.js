@@ -51,6 +51,13 @@ $( window ).load(function() {
       var oldname = $(this).attr("name");
       if (oldname === "history_plot") {
         $(this).attr("value", plot_number);
+      } else if (oldname === "plot[]event[]-text") {
+        $(this).attr("name", "plot[" + plot_number + "]event[0]-text");
+        $(this).parent().attr('data-event-num',0);
+      } else if (oldname === "plot[]event[]-timestamp") {
+        $(this).attr("name", "plot[" + plot_number + "]event[0]-timestamp");
+      } else if (oldname === "plot[]event") {
+        $(this).attr("name", "plot[" + plot_number +"]event").val(plot_number);
       } else {
         $(this).attr("name", oldname + plot_number);
       }
@@ -107,25 +114,68 @@ $( window ).load(function() {
   });
   
   $("div#program-list").on('click', 'a.add-event', function() {
+    //Add a marker to the plot
     var history_plot_number = $(this).parent().parent().children('input.plot-number').val();
-    var text = $(this).prev().prev().val();
-    var timestamp = Date.parse($(this).prev().val());
-    history_plots[history_plot_number]["events"].push({ 'date': timestamp, 'label': text });
+    var event_num = parseInt($(this).parent().data("event-num"),10);
+
+    
+    //updateHistoryPlot(history_plot_number);
+
+    //Add another event entry row.
+    var new_event_num = event_num + 1;
+    var add_event_fields = $(this).parent().clone();
+    $(add_event_fields).attr('data-event-num', new_event_num);
+    $(add_event_fields).children('input.event-num').attr("name", "plot[" + history_plot_number + "]event").val(new_event_num);
+    $(add_event_fields).children('input.event-text').attr("name", "plot[" + history_plot_number + "]event[" + new_event_num + "]-text").val("");
+    $(add_event_fields).children('input.event-timestamp').attr("name", "plot[" + history_plot_number + "]event[" + new_event_num + "]-timestamp").val("");
+    $(add_event_fields).insertAfter($(this).parent());
+    return false;
+  });
+  
+  $("div#program-list").on('change', 'input.event-text, input.event-timestamp', function() {    
+    var history_plot_number = $(this).parent().parent().children('input.plot-number').val();
+    var event_number = parseInt($(this).parent().data('event-num'),10);
+    
+    if (history_plots[history_plot_number]["events"][event_number] === undefined) {
+      var text = $(this).parent().children('input.event-text').val();
+      var timestamp = Date.parse($(this).parent().children('input.event-timestamp').val());
+      if (isNaN(timestamp)) {
+        return;
+      }
+      if (text == "") {
+        return;
+      }
+      history_plots[history_plot_number]["events"][event_number] = { 'date': timestamp, 'label': text };
+      updateHistoryPlot(history_plot_number);
+      return;
+    }
+    
+    if ($(this).hasClass('event-text')) {
+      var text = $(this).val();
+      history_plots[history_plot_number]["events"][event_number]['label'] = text;
+    } else if ($(this).hasClass('event-timestamp')) {
+      var timestamp = Date.parse($(this).val());
+      history_plots[history_plot_number]["events"][event_number]['date'] = timestamp;
+    }
+    
+    updateHistoryPlot(history_plot_number);
+  });
+  
+  function updateHistoryPlot(plotNum) {
     MG.data_graphic({
-      title: history_plots[history_plot_number]["PV"],
-      data: history_plots[history_plot_number]["plot_data"],
-      markers: history_plots[history_plot_number]["events"],
+      title: history_plots[plotNum]["PV"],
+      data: history_plots[plotNum]["plot_data"],
+      markers: history_plots[plotNum]["events"],
       width: 800,
       full_width: true,
       height: 260,
-      target: '#history-' + history_plot_number,
+      target: '#history-' + plotNum,
       x_accessor: 'date',
       y_accessor: 'val',
-      min_x: history_plots[history_plot_number]["plot_data"][0].date,
+      min_x: history_plots[plotNum]["plot_data"][0].date,
       min_y: 0,
       area: true
     });
-    return false;
-  });
+  }
   
 });
