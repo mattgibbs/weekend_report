@@ -64,8 +64,14 @@ def create_report():
       new_downtime = models.DowntimeData()
       db.session.add(new_downtime)
       new_downtime.program = new_program
-      new_downtime.downtime = float(request.form['downtime-' + program_number])
-      new_downtime.config_changes = float(request.form['config_changes-' + program_number])
+      if request.form['downtime-' + program_number]:
+        new_downtime.downtime = float(request.form['downtime-' + program_number])
+      else:
+        new_downtime.downtime = 0
+      if request.form['config_changes-' + program_number]:
+        new_downtime.config_changes = float(request.form['config_changes-' + program_number])
+      else:
+        new_downtime.config_changes = 0
       new_downtime.calc_delivered()
     
     history_plots = filter(None, request.form.getlist('history_plot'))
