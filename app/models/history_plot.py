@@ -7,6 +7,7 @@ class HistoryPlot(db.Model):
   pv = db.Column(db.String(140), nullable = False)
   events = db.relationship('HistoryEvent', backref='history_plot', lazy='dynamic')
   archiver_json = db.Column(db.Text())
+  display_order = db.Column(db.Integer)
   
   def archiver_url(self):
     base_url_string = "http://lcls-archapp.slac.stanford.edu/retrieval/data/getData.json?pv=mean_360({0})&from={1}&to={2}"
