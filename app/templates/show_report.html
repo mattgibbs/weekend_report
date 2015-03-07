@@ -62,7 +62,7 @@
                 title: "Gas Detector History Over The Weekend",
                 data: time_series,
                 markers: [{% for event in report_item.events %}
-                  {'date': new Date('{{ event.timestamp.isoformat() }}'), 'label': '{{ event.text }}'},
+                  {'date': new Date('{{ event.utc_iso_string() }}'), 'label': '{{ event.text }}'},
                           {% endfor %}],
                 width: 800,
                 full_width: true,
@@ -83,7 +83,7 @@
                   title: "{{ report_item.pv }}",
                   data: time_series,
                   markers: [{% for event in report_item.events %}
-                    {'date': new Date('{{ event.timestamp.isoformat() }}'), 'label': '{{ event.text }}'},
+                    {'date': new Date('{{ event.utc_iso_string() }}'), 'label': '{{ event.text }}'},
                             {% endfor %}],
                   width: 800,
                   full_width: true,
