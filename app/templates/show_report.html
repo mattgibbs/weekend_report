@@ -5,96 +5,97 @@
 </div>
 
 <div id="program-list-container" class="row">
-  {% for program in report.programs %}
-  <div class="program-row row">
-    <div class="program-notes col-sm-7">
-      <span class="program-name">{{ program.name }}</span>
-      <table>
-        <tr>
-          <th>Time</th>
-          <td>{{ program.time_note }}</td>
-        </tr>
-        <tr>
-          <th>Configuration</th>
-          <td>{{ program.config_note }}</td>
-        </tr>
-        <tr>
-          <th>Performance</th>
-          <td>{{ program.performance_note }}</td>
-        </tr>
-      </table>
-      <ul class="notes-list">
-        {% for note in program.other_notes %}
-        <li>{{ note.text }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    <div class="col-sm-5">
-      <div class="downtime-chart" id="{{ program.name }}-uptime">
-        <script type="text/javascript">
-          //Width and height
-          var w = 210;
-          var h = 210;
-          var dataset = [ {% if program.downtime_data.downtime > 0 %}{title: "Downtime", value: {{ program.downtime_data.downtime }} }, {% endif %}{% if program.downtime_data.config_changes > 0 %}{title: "Config Changes", value: {{ program.downtime_data.config_changes }} }, {% endif %}{% if program.downtime_data.delivered > 0 %}{title: "Delivered", value: {{ program.downtime_data.delivered }} } {% endif %} ];
-          makePie('div#{{ program.name }}-uptime',dataset,w,h);
-        </script>
+  {% for report_item in report_items %}
+    {% if report_item.__tablename__ == 'program' %}
+      <div class="program-row row">
+        <div class="program-notes col-sm-7">
+          <span class="program-name">{{ report_item.name }}</span>
+          <table>
+            <tr>
+              <th>Time</th>
+              <td>{{ report_item.time_note }}</td>
+            </tr>
+            <tr>
+              <th>Configuration</th>
+              <td>{{ report_item.config_note }}</td>
+            </tr>
+            <tr>
+              <th>Performance</th>
+              <td>{{ report_item.performance_note }}</td>
+            </tr>
+          </table>
+          <ul class="notes-list">
+            {% for note in report_item.other_notes %}
+            <li>{{ note.text }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="col-sm-5">
+          <div class="downtime-chart" id="{{ report_item.name }}-uptime">
+            <script type="text/javascript">
+              //Width and height
+              var w = 210;
+              var h = 210;
+              var dataset = [ {% if report_item.downtime_data.downtime > 0 %}{title: "Downtime", value: {{ report_item.downtime_data.downtime }} }, {% endif %}{% if report_item.downtime_data.config_changes > 0 %}{title: "Config Changes", value: {{ report_item.downtime_data.config_changes }} }, {% endif %}{% if report_item.downtime_data.delivered > 0 %}{title: "Delivered", value: {{ report_item.downtime_data.delivered }} } {% endif %} ];
+              makePie('div#{{ report_item.name }}-uptime',dataset,w,h);
+            </script>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  {% endfor %}
-  {% for plot in report.history_plots %}
-  <div class="history-row row">
-    <div class="col-sm-12">
-      <div class="history-plot mg-main-area-solid" id='history-{{ plot.id }}'>
-        <script type="text/javascript">
-        {% if plot.archiver_json %}
-          var data = {{ plot.archiver_json }};
-          var time_series = data[0].data.map(function(item) {
-            return {"date": new Date(item.secs * 1000), "val": item.val}; 
-          });
-          MG.data_graphic({
-            title: "Gas Detector History Over The Weekend",
-            data: time_series,
-            markers: [{% for event in plot.events %}
-              {'date': new Date('{{ event.timestamp.isoformat() }}'), 'label': '{{ event.text }}'},
-                      {% endfor %}],
-            width: 800,
-            full_width: true,
-            height: 260,
-            target: '#history-{{ plot.id }}',
-            x_accessor: 'date',
-            y_accessor: 'val',
-            min_x: time_series[0].date,
-            min_y: 0,
-            area: true
-          });
-          {% else %}
-          d3.json('http://lcls-archapp.slac.stanford.edu/retrieval/data/getData.json?pv=mean_360({{ plot.pv }})&from={{ plot.report.start.isoformat() }}.000Z&to={{plot.report.end.isoformat()}}.000Z', function(data) {
-            var time_series = data[0].data.map(function(item) {
-              return {"date": new Date(item.secs * 1000), "val": item.val};
-            });
-            MG.data_graphic({
-              title: "Gas Detector History Over The Weekend",
-              data: time_series,
-              markers: [{% for event in plot.events %}
-                {'date': new Date('{{ event.timestamp.isoformat() }}'), 'label': '{{ event.text }}'},
-                        {% endfor %}],
-              width: 800,
-              full_width: true,
-              height: 260,
-              target: '#history-{{ plot.id }}',
-              x_accessor: 'date',
-              y_accessor: 'val',
-              min_x: time_series[0].date,
-              min_y: 0,
-              area: true
-            });
-          });
-        {% endif %}
-        </script>
+    {% elif report_item.__tablename__ == 'history_plot' %}
+      <div class="history-row row">
+        <div class="col-sm-12">
+          <div class="history-plot mg-main-area-solid" id='history-{{ report_item.id }}'>
+            <script type="text/javascript">
+            {% if report_item.archiver_json %}
+              var data = {{ report_item.archiver_json }};
+              var time_series = data[0].data.map(function(item) {
+                return {"date": new Date(item.secs * 1000), "val": item.val}; 
+              });
+              MG.data_graphic({
+                title: "Gas Detector History Over The Weekend",
+                data: time_series,
+                markers: [{% for event in report_item.events %}
+                  {'date': new Date('{{ event.timestamp.isoformat() }}'), 'label': '{{ event.text }}'},
+                          {% endfor %}],
+                width: 800,
+                full_width: true,
+                height: 260,
+                target: '#history-{{ report_item.id }}',
+                x_accessor: 'date',
+                y_accessor: 'val',
+                min_x: time_series[0].date,
+                min_y: 0,
+                area: true
+              });
+              {% else %}
+              d3.json('http://lcls-archapp.slac.stanford.edu/retrieval/data/getData.json?pv=mean_360({{ report_item.pv }})&from={{ report_item.report.start.isoformat() }}.000Z&to={{report_item.report.end.isoformat()}}.000Z', function(data) {
+                var time_series = data[0].data.map(function(item) {
+                  return {"date": new Date(item.secs * 1000), "val": item.val};
+                });
+                MG.data_graphic({
+                  title: "{{ report_item.pv }}",
+                  data: time_series,
+                  markers: [{% for event in report_item.events %}
+                    {'date': new Date('{{ event.timestamp.isoformat() }}'), 'label': '{{ event.text }}'},
+                            {% endfor %}],
+                  width: 800,
+                  full_width: true,
+                  height: 260,
+                  target: '#history-{{ report_item.id }}',
+                  x_accessor: 'date',
+                  y_accessor: 'val',
+                  min_x: time_series[0].date,
+                  min_y: 0,
+                  area: true
+                });
+              });
+            {% endif %}
+            </script>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    {% endif %}
   {% endfor %}
 </div>
 {% endblock %}

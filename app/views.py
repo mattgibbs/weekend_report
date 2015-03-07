@@ -18,7 +18,12 @@ def show_report(reportid = None):
   report = db.session.query(models.Report).get(reportid)
   if report == None:
     abort(404)
-  return render_template("show_report.html", report=report)
+  report_items = []
+  report_items.extend(report.programs.all())
+  report_items.extend(report.history_plots.all())
+  report_items.sort(key=lambda report_item: report_item.display_order)
+  
+  return render_template("show_report.html", report=report, report_items=report_items)
   
 @app.route('/reports/new/')
 def new_report():
