@@ -5,7 +5,7 @@ from dateutil import parser
 
 @app.route('/')
 def root_index():
-	return "Welcome to the weekend report."
+	return redirect('report_index')
   
 @app.route('/reports/')
 def report_index():
