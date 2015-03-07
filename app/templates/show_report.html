@@ -45,7 +45,7 @@
   {% for plot in report.history_plots %}
   <div class="history-row row">
     <div class="col-sm-12">
-      <div class="history-plot" id='history-{{ plot.id }}'>
+      <div class="history-plot mg-main-area-solid" id='history-{{ plot.id }}'>
         <script type="text/javascript">
         {% if plot.archiver_json %}
           var data = {{ plot.archiver_json }};
