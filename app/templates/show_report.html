@@ -37,13 +37,13 @@
           </ul>
         </div>
         <div class="col-sm-5">
-          <div class="downtime-chart" id="{{ report_item.name }}-uptime">
+          <div class="downtime-chart" id="{{ report_item.name_without_whitespace() }}-uptime">
             <script type="text/javascript">
               //Width and height
               var w = 210;
               var h = 210;
               var dataset = [ {% if report_item.downtime_data.downtime > 0 %}{title: "Downtime", value: {{ report_item.downtime_data.downtime }} }, {% endif %}{% if report_item.downtime_data.config_changes > 0 %}{title: "Config Changes", value: {{ report_item.downtime_data.config_changes }} }, {% endif %}{% if report_item.downtime_data.delivered > 0 %}{title: "Delivered", value: {{ report_item.downtime_data.delivered }} } {% endif %} ];
-              makePie('div#{{ report_item.name }}-uptime',dataset,w,h);
+              makePie('div#{{ report_item.name_without_whitespace() }}-uptime',dataset,w,h);
             </script>
           </div>
         </div>

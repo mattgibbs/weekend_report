@@ -10,3 +10,6 @@ class Program(db.Model):
   other_notes = db.relationship('Note', backref='program', lazy='dynamic')
   downtime_data = db.relationship('DowntimeData', uselist=False, backref='program')
   display_order = db.Column(db.Integer)
+  
+  def name_without_whitespace(self):
+    return ''.join(self.name.split())

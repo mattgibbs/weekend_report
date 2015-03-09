@@ -17,3 +17,6 @@ class HistoryPlot(db.Model):
     r = requests.get(self.archiver_url())
     if r.status_code == 200 and r.headers['content-type'] == 'application/json':
       self.archiver_json = r.text
+      
+  def name_without_whitespace(self):
+    return ''.join(self.name.split())
