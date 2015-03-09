@@ -73,7 +73,7 @@ def create_report():
       else:
         new_downtime.config_changes = 0
       if request.form['delivered-' + program_number]:
-        new_downtime.delivered = float(request.form['delivered-'])
+        new_downtime.delivered = float(request.form['delivered-' + program_number])
       else:
         new_downtime.delivered = 0
     
