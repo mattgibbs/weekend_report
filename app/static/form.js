@@ -34,6 +34,7 @@ $( window ).load(function() {
     //Get all the daily reports that fall within our weekend report range.
     console.log("https://mccelog.slac.stanford.edu/elog/dev/mgibbs/mcc_shift_sum/json_report.php?start_date=" + startDate.toISOString() + "&end_date=" + endDate.toISOString());
     $.ajax({
+      dataType: "json",
       url: "https://mccelog.slac.stanford.edu/elog/dev/mgibbs/mcc_shift_sum/json_report.php?start_date=" + startDate.toISOString() + "&end_date=" + endDate.toISOString()
     }).done(function( data ) {
       dailyReports = data;
