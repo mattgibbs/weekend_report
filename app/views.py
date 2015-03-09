@@ -72,7 +72,10 @@ def create_report():
         new_downtime.config_changes = float(request.form['config_changes-' + program_number])
       else:
         new_downtime.config_changes = 0
-      new_downtime.calc_delivered()
+      if request.form['delivered-' + program_number]:
+        new_downtime.delivered = float(request.form['delivered-'])
+      else:
+        new_downtime.delivered = 0
     
     history_plots = filter(None, request.form.getlist('history_plot'))
     for plot_number in history_plots:
