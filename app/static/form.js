@@ -40,9 +40,9 @@ $( window ).load(function() {
       //Calculate time accounting totals for each program reported in the daily reports.
       program_totals = {};
       var programs = []; //This is just an array of the keys used to access the data in program_totals.
-      $.each(dailyReports, function(i, report) {
-        $.each(report['shifts'], function(j, shift) {
-          $.each(shift['programs'], function(k, program) {
+      dailyReports.forEach(function(report) {
+        report['shifts'].forEach(function(shift) {
+          shift['programs'].forEach(function(program) {
             if (program_totals[program['name']] == undefined) {
               programs.push(program['name']);
               program_totals[program['name']] = {"delivered": 0, "user_off": 0, "tuning": 0, "config_changes": 0, "down": 0, "off": 0};
@@ -56,11 +56,12 @@ $( window ).load(function() {
           });
         });
       });
+      
       //Now that we have all the report totals, we can populate the <option> fields for the import program select fields.
-      $.each(programs, function(i, program) {
+      programs.forEach(function(program) {
         $('select.imported-programs').append('<option value="' + program + '">' + program + '</option>');
       });
-
+      
       $('span.import-downtime').show();
       console.log(program_totals);
       console.log(dailyReports);
