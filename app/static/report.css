@@ -63,6 +63,10 @@ div.downtime-inputs {
   font-size: 1.2em;
 }
 
+div.downtime-inputs span.import-downtime {
+  font-size: 0.8em;
+}
+
 input.name {
   margin-bottom: 0.2em;
 }

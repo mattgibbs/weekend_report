@@ -1,5 +1,6 @@
 /* form.js - adds interactivity to the weekend report form */
 $( window ).load(function() {
+  
   //Program stuff
   var program_number = 0;
   var ordering_number = 0;
@@ -21,7 +22,86 @@ $( window ).load(function() {
     });
     program_number += 1;
   }
-  addNewProgram();
+  
+  var dailyReports = [];
+  var program_totals = {};
+  function importDailyReports() {
+    console.log("Importing reports!");
+    var startDate = new Date($('input#start').val());
+    var endDate = new Date($('input#end').val());
+    startDate.setDate(startDate.getDate() + 1);
+    endDate.setDate(endDate.getDate() + 1);
+    //Get all the daily reports that fall within our weekend report range.
+    console.log("https://mccelog.slac.stanford.edu/elog/dev/mgibbs/mcc_shift_sum/json_report.php?start_date=" + startDate.toISOString() + "&end_date=" + endDate.toISOString());
+    $.ajax({
+      url: "https://mccelog.slac.stanford.edu/elog/dev/mgibbs/mcc_shift_sum/json_report.php?start_date=" + startDate.toISOString() + "&end_date=" + endDate.toISOString()
+    }).done(function( data ) {
+      dailyReports = data;
+      //Calculate time accounting totals for each program reported in the daily reports.
+      program_totals = {};
+      var programs = []; //This is just an array of the keys used to access the data in program_totals.
+      dailyReports.forEach(function(report) {
+        report['shifts'].forEach(function(shift) {
+          shift['programs'].forEach(function(program) {
+            if (program_totals[program['name']] == undefined) {
+              programs.push(program['name']);
+              program_totals[program['name']] = {"delivered": 0, "user_off": 0, "tuning": 0, "config_changes": 0, "down": 0, "off": 0};
+            }
+            program_totals[program['name']]['delivered'] += parseFloat(program['delivered']);
+            program_totals[program['name']]['user_off'] += parseFloat(program['user_off']);
+            program_totals[program['name']]['tuning'] += parseFloat(program['tuning']);
+            program_totals[program['name']]['config_changes'] += parseFloat(program['config_changes']);
+            program_totals[program['name']]['down'] += parseFloat(program['down']);
+            program_totals[program['name']]['off'] += parseFloat(program['off']);
+          });
+        });
+      });
+      
+      //Now that we have all the report totals, we can populate the <option> fields for the import program select fields.
+      programs.forEach(function(program) {
+        $('select.imported-programs').append('<option value="' + program + '">' + program + '</option>');
+      });
+      
+      $('span.import-downtime').show();
+      console.log(program_totals);
+      console.log(dailyReports);
+    });
+  }
+  
+  $("div#program-list").on('change', 'select.imported-programs', function(){
+    var selected_program = $(this).val();
+    var totals = program_totals[selected_program];
+    if (totals === undefined) {
+      return;
+    }
+    $(this).parent().parent().find('input.downtime').val(totals['down'].toFixed(1));
+    $(this).parent().parent().find('input.config_changes').val(totals['config_changes'].toFixed(1));
+    $(this).parent().parent().find('input.delivered').val(totals['delivered'].toFixed(1));
+  });
+  
+  function datesFilled() {
+    if ($("input#start").val() == "" && $("input#end").val() == "") {
+      return false;
+    }
+    var startDate = new Date($('input#start').val());
+    var endDate = new Date($('input#end').val());
+    if (isNaN(startDate) || isNaN(endDate)) {
+      return false;
+    }
+    return true;
+  }
+  
+  $("a#begin").on('click', function() {
+    if (datesFilled()) {
+      addNewProgram();
+      importDailyReports();
+      $(this).hide();
+      $('div.add').show();
+    } else {
+      alert("Dates not valid.");
+    }
+    return false;
+  });
   
   $("a#add-program").on('click', function() {
     addNewProgram();
@@ -125,9 +205,6 @@ $( window ).load(function() {
     var history_plot_number = $(this).parent().parent().children('input.plot-number').val();
     var event_num = parseInt($(this).parent().data("event-num"),10);
 
-    
-    //updateHistoryPlot(history_plot_number);
-
     //Add another event entry row.
     var new_event_num = event_num + 1;
     var add_event_fields = $(this).parent().clone();
@@ -184,5 +261,4 @@ $( window ).load(function() {
       area: true
     });
   }
-  
 });
