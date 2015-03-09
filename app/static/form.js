@@ -37,6 +37,7 @@ $( window ).load(function() {
       url: "https://mccelog.slac.stanford.edu/elog/dev/mgibbs/mcc_shift_sum/json_report.php?start_date=" + startDate.toISOString() + "&end_date=" + endDate.toISOString()
     }).done(function( data ) {
       dailyReports = data;
+      console.log(dailyReports);
       //Calculate time accounting totals for each program reported in the daily reports.
       program_totals = {};
       var programs = []; //This is just an array of the keys used to access the data in program_totals.
