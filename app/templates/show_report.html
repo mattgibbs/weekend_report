@@ -5,7 +5,7 @@
 </div>
 
 <div id="program-list-container" class="row">
-  {% for report_item in report_items %}
+  {% for report_item in report.report_items() %}
     {% if report_item.__tablename__ == 'program' %}
       <div class="program-row row">
         <div class="program-notes col-sm-7">

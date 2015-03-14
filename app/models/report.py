@@ -15,6 +15,13 @@ class Report(db.Model):
   programs = db.relationship('Program', backref='report', lazy='dynamic')
   history_plots = db.relationship('HistoryPlot', backref='report', lazy='dynamic')
   
+  def report_items(self):
+    report_items = []
+    report_items.extend(self.programs.all())
+    report_items.extend(self.history_plots.all())
+    report_items.sort(key=lambda report_item: report_item.display_order)
+    return report_items
+  
   def from_form(self, form):
     #Parse the start time string and convert to UTC before storing it.
     local_start = parser.parse(form['start'], ignoretz = True)
