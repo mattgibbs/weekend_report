@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, abort
 from app import app, db, models
 
 
@@ -39,4 +39,16 @@ def create_report():
   flash('New report saved. <a href="' + url_for('show_report', reportid = report.id) + '">Click here to view it.</a>')
   return redirect(url_for('report_index'))
     
+@app.route('/reports/<int:reportid>/edit/', methods=['GET'])
+def edit_report(reportid = None):
+  report = db.session.query(models.Report).get(reportid)
+  if report == None:
+    abort(404)
+  return render_template("report_form.html", report = report)
   
+@app.route('/reports/<int:reportid>/', methods=['POST'])
+def update_report():
+  report = db.session.query(models.Report).get(reportid)
+  if report == None:
+    abort(404)
+  abort(404)
