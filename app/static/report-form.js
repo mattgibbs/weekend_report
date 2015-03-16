@@ -154,6 +154,19 @@ Program.prototype.addNewNote = function() {
   $(new_note_element).appendTo(note_list);
 };
 
+Program.prototype.removeNote = function(noteid) {
+  var note_index = -1;
+  this.notes.forEach(function(note, i) {
+    if (note.id === noteid) {
+      $(note.element).remove();
+      note_index = i;
+    }
+  });
+  if (note_index > -1) {
+    this.notes.splice(note_index, 1);
+  }
+}
+
 var Note = function(elem) {
   this.id = null;
   this.programid = null;
@@ -276,9 +289,15 @@ $( window ).load(function() {
   });
   
   $('div#report_items').on('click', 'a.add-note', function() {
-    console.log("AAA");
     var progid = $(this).parent().parent().data('prog-id');
     report.programs[progid].addNewNote();
+    return false;
+  });
+  
+  $('div#report_items').on('click', 'a.remove-note', function() {
+    var progid = $(this).parent().parent().parent().parent().data('prog-id');
+    var noteid = $(this).prev().prev().val();
+    report.programs[progid].removeNote(noteid);
     return false;
   });
   
