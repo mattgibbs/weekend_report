@@ -145,7 +145,7 @@ Program.prototype.setDowntimeData = function(data) {
 
 Program.prototype.addNewNote = function() {
   var note_list = $(this.element).find('ul.notes-list');
-  var new_note_element = note_list.children().last().clone();
+  var new_note_element = $('div#blank-program > div.program-row').find('ul.notes-list').children().last().clone();
   var newNote = new Note(new_note_element);
   newNote.programid = this.id;
   newNote.setid('new' + Date.now());
