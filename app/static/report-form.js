@@ -124,16 +124,19 @@ Program.prototype.readFromElement = function() {
 Program.prototype.setid = function(newid) {
   this.id = newid;
   $(this.element).attr('data-prog-id', newid);
-  $(this.element).find('input').each(function(index) {
-    var oldname = $(this).attr("name");
-    if (oldname === "program") {
-      $(this).attr("value", newid);
-    } else if (oldname === "program-order-") {
-      $(this).attr("name", oldname + newid).val(this.displayOrder);
-    } else {
-      $(this).attr("name", oldname + newid);
-    }
-  });
+  $(this.element).find('input.program-id').attr("value", newid);
+  $(this.element).find('input.ordering-number').attr("name", "program-order-" + newid).val(this.displayOrder);
+  $(this.element).find('input.name').attr("name", "name-" + newid);
+  $(this.element).find('input.time_note').attr("name", "time_note-" + newid);
+  $(this.element).find('input.config_note').attr("name", "config_note-" + newid);
+  $(this.element).find('input.performance_note').attr("name", "performance_note-" + newid);
+  //The stuff we do to the note inputs (next three lines) is only correct if this is a new program.  Luckily that is the only time setid is called.
+  var new_note_id = "new" + Date.now();
+  $(this.element).find('input.note_id').attr("value", new_note_id);
+  $(this.element).find('input.other_note').attr("name", "program[" + newid + "]note[" + new_note_id +"]-text");
+  $(this.element).find('input.downtime').attr("name", "downtime-" + newid);
+  $(this.element).find('input.config_changes').attr("name", "config_changes-" + newid);
+  $(this.element).find('input.delivered').attr("name", "delivered-" + newid);
 };
 
 Program.prototype.setDowntimeData = function(data) {
