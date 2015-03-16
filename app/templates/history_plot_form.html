@@ -1,0 +1,54 @@
+<div class="history-row row" data-plot-id="{{ report_item.id }}">
+  <input class="plot-number" type="hidden" name="history_plot" value="{{ report_item.id }}">
+  <input class="ordering-number" type="hidden" name="plot-order-" value="{{ report_item.display_order }}">
+  <div class="col-sm-11">
+    <input class="pv" name="pv-" placeholder="Enter a PV" size="40" value="{{ report_item.pv }}"> <a class="plot-pv" href="#">Plot PV</a>
+    {% if report_item.events.count() > 0 %}
+      {% for event in report_item.events %}
+        <div class="add-event">
+            <input class="event-num" type="hidden" name="plot[]event" value=" {{ event.id }}">
+            <input class="event-text" name="plot[]event[]-text" placeholder="Event Text" value="{{ event.text }}"> 
+            <input class="event-timestamp" name="plot[]event[]-timestamp" placeholder="Feb 22, 2015 13:30:00" value="{{ event.timestamp.strftime('%b %d, %Y %H:%M:%S')}}">
+          <a class="add-event" href="#">Add Event</a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="add-event">
+        <input class="event-num" type="hidden" name="plot[]event" value="">
+        <input class="event-text" name="plot[]event[]-text" placeholder="Event Text"> 
+        <input class="event-timestamp" name="plot[]event[]-timestamp" placeholder="Feb 22, 2015 13:30:00">
+        <a class="add-event" href="#">Add Event</a>
+      </div>
+    {% endif %}
+  </div>
+  <div class="col-sm-1">
+    <a href="#" class="remove-plot">Remove</a>
+  </div>
+  <div class="col-sm-12">
+    <div class="history-plot mg-main-area-solid" id="history-{{ report_item.id }}">
+      <script type="text/javascript">
+      d3.json('http://lcls-archapp.slac.stanford.edu/retrieval/data/getData.json?pv=mean_360({{ report_item.pv }})&from={{ report_item.report.start.isoformat() }}.000Z&to={{report_item.report.end.isoformat()}}.000Z', function(data) {
+        var time_series = data[0].data.map(function(item) {
+          return {"date": new Date(item.secs * 1000), "val": item.val};
+        });
+        MG.data_graphic({
+          title: "{{ report_item.pv }}",
+          data: time_series,
+          markers: [{% for event in report_item.events %}
+            {'date': new Date('{{ event.utc_iso_string() }}'), 'label': '{{ event.text }}'},
+                    {% endfor %}],
+          width: 800,
+          full_width: true,
+          height: 260,
+          target: '#history-{{ report_item.id }}',
+          x_accessor: 'date',
+          y_accessor: 'val',
+          min_x: time_series[0].date,
+          min_y: 0,
+          area: true
+        });
+      });
+      </script>
+    </div>
+  </div>
+</div>

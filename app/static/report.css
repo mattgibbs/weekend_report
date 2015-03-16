@@ -75,3 +75,12 @@ a.remove-program {
   float: right;
   font-size: 1.2em;
 }
+
+a.remove-plot {
+  float: right;
+  font-size: 1.2em;
+}
+
+input.other_note {
+  width: 70%;
+}

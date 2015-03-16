@@ -1,0 +1,62 @@
+<div class="program-row row" {% if report_item %}data-prog-id="{{ report_item.id }}"{% endif %}>
+  <input class="program-id" type="hidden" name="program" value="{{ report_item.id if report_item else '' }}">
+  <input class="ordering-number" type="hidden" name="program-order-{{ report_item.id  if report_item else ''}}" value="{{ report_item.display_order }}">
+  <div class="program-notes col-sm-7">
+    <span class="program-name"><input class="name" name="name-{{ report_item.id  if report_item else ''}}" placeholder="Name" size="10" value="{{ report_item.name  if report_item else ''}}"></span>
+    <table>
+      <tr>
+        <th>Time</th>
+        <td><input class="time_note" name="time_note-{{ report_item.id  if report_item else ''}}" value="{{ report_item.time_note  if report_item else ''}}"></td>
+      </tr>
+      <tr>
+        <th>Configuration</th>
+        <td><input class="config_note" name="config_note-{{ report_item.id  if report_item else ''}}" value="{{ report_item.config_note  if report_item else ''}}"></td>
+      </tr>
+      <tr>
+        <th>Performance</th>
+        <td><input class="performance_note" name="performance_note-{{ report_item.id  if report_item else ''}}" value="{{ report_item.performance_note  if report_item else ''}}"></td>
+      </tr>
+    </table>
+    <ul class="notes-list">
+      {% if report_item and report_item.other_notes.count() > 0 %}
+        {% for note in report_item.other_notes %}
+          <li class="other_note">
+            <input class="note_id" type="hidden" name="note" value="{{ note.id }}">
+            <input class="other_note" name="program[{{ report_item.id }}]note[{{ note.id }}]-text" placeholder="Note" size="80" value="{{ note.text }}">
+            <a href="#" class="remove-note">Remove Note</a>
+          </li>
+        {% endfor %}
+      {% else %}
+        <li>
+          <input class="note_id" type="hidden" name="note" value="new">
+          <input class="other_note" name="program[{{ report_item.id  if report_item else ''}}]note[]-text" placeholder="Note" size="80">
+        </li>
+      {% endif %}
+    </ul>
+    <a href="#" class="add-note">Add another note</a>
+  </div>
+  <div class="downtime-inputs col-sm-4">
+    <table>
+      <tr>
+        <th>Downtime</th>
+        <td><input class="downtime" name="downtime-{{ report_item.id if report_item else ''}}" placeholder="0.0" value="{{ report_item.downtime_data.downtime  if report_item else ''}}"></td>
+      </tr>
+      <tr>
+        <th>Config Changes</th>
+        <td><input class="config_changes" name="config_changes-{{ report_item.id  if report_item else ''}}" placeholder="0.0" value="{{ report_item.downtime_data.config_changes if report_item else ''}}"></td>
+      </tr>
+      <tr>
+        <th>Delivered</th>
+        <td><input class="delivered" name="delivered-{{ report_item.id if report_item else ''}}" placeholder="0.0" value="{{ report_item.downtime_data.delivered if report_item else ''}}"></td>
+      </tr>
+    </table>
+    <span class="import-downtime" style="display: none;">Import time data from daily reports for program: 
+      <select class="imported-programs">
+        <option value="">(none)</option>
+      </select>
+    </span>
+  </div>
+  <div class="col-sm-1">
+    <a href="#" class="remove-program">Remove</a>
+  </div>
+</div>
