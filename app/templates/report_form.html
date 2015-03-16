@@ -24,55 +24,7 @@
   </div>
   <!-- Below are the blank templates for a program or history plot -->
   <div id="blank-program" style="display: none;">
-    <div class="program-row row">
-      <div class="program-notes col-sm-7">
-        <input type="hidden" name="program" value="">
-        <input class="ordering-number" type="hidden" name="program-order-" value="">
-        <span class="program-name"><input class="name" name="name-" placeholder="Name" size="10"></span>
-        <table>
-          <tr>
-            <th>Time</th>
-            <td><input name="time_note-"></td>
-          </tr>
-          <tr>
-            <th>Configuration</th>
-            <td><input name="config_note-"></td>
-          </tr>
-          <tr>
-            <th>Performance</th>
-            <td><input name="performance_note-"></td>
-          </tr>
-        </table>
-        <ul class="notes-list">
-          <li><input name="other_note-" placeholder="Note" size="80"></li>
-        </ul>
-        <a href="#" class="add-note">Add another note</a>
-      </div>
-      <div class="downtime-inputs col-sm-4">
-        <table>
-          <tr>
-            <th>Downtime</th>
-            <td><input class="downtime" name="downtime-" placeholder="0.0"></td>
-          </tr>
-          <tr>
-            <th>Config Changes</th>
-            <td><input class="config_changes" name="config_changes-" placeholder="0.0"></td>
-          </tr>
-          <tr>
-            <th>Delivered</th>
-            <td><input class="delivered" name="delivered-" placeholder="0.0"></td>
-          </tr>
-        </table>
-        <span class="import-downtime" style="display: none;">Import time data from daily reports for program: 
-          <select class="imported-programs">
-            <option value="">(none)</option>
-          </select>
-        </span>
-      </div>
-      <div class="col-sm-1">
-        <a href="#" class="remove-program">Remove</a>
-      </div>
-    </div>
+    {% include "program_form.html" %}
   </div>
   
   <div id="blank-history-plot" style="display: none;">

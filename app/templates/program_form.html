@@ -1,6 +1,6 @@
 <div class="program-row row" {% if report_item %}data-prog-id="{{ report_item.id }}"{% endif %}>
   <input class="program-id" type="hidden" name="program" value="{{ report_item.id if report_item else '' }}">
-  <input class="ordering-number" type="hidden" name="program-order-{{ report_item.id  if report_item else ''}}" value="{{ report_item.display_order }}">
+  <input class="ordering-number" type="hidden" name="program-order-{{ report_item.id if report_item else '' }}" value="{{ report_item.display_order if report_item else '' }}">
   <div class="program-notes col-sm-7">
     <span class="program-name"><input class="name" name="name-{{ report_item.id  if report_item else ''}}" placeholder="Name" size="10" value="{{ report_item.name  if report_item else ''}}"></span>
     <table>
