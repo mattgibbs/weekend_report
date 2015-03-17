@@ -106,6 +106,13 @@ Report.prototype.readFromElement = function(elem) {
   this.endDate = this.parseStartEndString($(elem).find('input#end').val());
 };
 
+Report.prototype.datesValid = function() {
+  if (isNaN(this.startDate) || isNaN(this.endDate)) {
+    return false;
+  }
+  return true;
+}
+
 var Program = function(elem) {
   this.id = null;
   this.name = null;
@@ -489,6 +496,15 @@ $( window ).load(function() {
   
   $('input#end').on('change', function() {
     report.setEndDate($(this).val());
+  });
+  
+  $('a#begin').on('click', function() {
+    if (report.datesValid()) {
+      $(this).hide();
+      $('div.add').show();
+    } else {
+      alert("Enter valid dates to begin.");
+    }
   });
   
 });
