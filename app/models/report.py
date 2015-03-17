@@ -41,7 +41,11 @@ class Report(db.Model):
       new_program.time_note = form['time_note-' + program_number]
       new_program.config_note = form['config_note-' + program_number]
       new_program.performance_note = form['performance_note-' + program_number]
-      new_program.display_order = int(form['program-order-' + program_number])
+      try:
+        new_program.display_order = int(form['program-order-' + program_number])
+        
+      except ValueError:
+        pass
       other_notes = filter(None, form.getlist('other_note-' + program_number))
       for other_note in other_notes:
         new_note = Note()
@@ -67,7 +71,10 @@ class Report(db.Model):
       new_plot = HistoryPlot()
       new_plot.report = self
       new_plot.pv = form['pv-' + plot_number]
-      new_plot.display_order = int(form['plot-order-' + plot_number])
+      try:
+        new_plot.display_order = int(form['plot-order-' + plot_number])
+      except ValueError:
+        pass
       events = form.getlist("plot[{0}]event".format(plot_number))
       for event_number in events:
         new_event = HistoryEvent()
