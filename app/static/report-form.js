@@ -251,7 +251,22 @@ HistoryPlot.prototype.addNewEvent = function() {
 HistoryPlot.prototype.removeEvent = function(eventid) {
   $(this.events[eventid].element).remove();
   delete this.events[eventid];
+  this.refreshMarkers();
 };
+
+HistoryPlot.prototype.plotMarkers = function() {
+  var allEvents = [];
+  for (var key in this.events) {
+    if (this.events.hasOwnProperty(key)) {
+      allEvents.push(this.events[key]);
+    }
+  }
+  
+  var markers = allEvents.map(function(event) {
+    return { label: event.text, date: event.timestamp };
+  });
+  return markers;
+}
 
 HistoryPlot.prototype.setid = function(newid) {
   this.id = newid;
@@ -289,7 +304,7 @@ HistoryPlot.prototype.plot = function() {
     this_plot.plotData = MG.data_graphic({
       title: this_plot.pv,
       data: time_series,
-      markers: [],
+      markers: this_plot.plotMarkers(),
       width: 800,
       full_width: true,
       height: 260,
@@ -304,6 +319,29 @@ HistoryPlot.prototype.plot = function() {
   });
 };
 
+HistoryPlot.prototype.refreshMarkers = function() {
+  //If we don't have the plot data stored (happens if this was an existing plot, rendered in the template), we need to get it.
+  if (this.plotData === null) {
+    this.plot();
+    return;
+  }
+  var this_plot = this;
+  MG.data_graphic({
+    title: this_plot.pv,
+    data: this_plot.plotData,
+    markers: this_plot.plotMarkers(),
+    width: 800,
+    full_width: true,
+    height: 260,
+    target: '#history-' + this_plot.id,
+    x_accessor: 'date',
+    y_accessor: 'val',
+    min_x: this_plot.plotData[0].date,
+    min_y: 0,
+    area: true
+  });
+};
+
 var HistoryEvent = function(plot, elem) {
   this.id = null;
   this.plot = plot;
@@ -315,6 +353,7 @@ var HistoryEvent = function(plot, elem) {
 HistoryEvent.prototype.setid = function(newid) {
   this.id = newid;
   $(this.element).attr("data-event-id", newid);
+  $(this.element).attr("data-plot-id", this.plot.id);
   $(this.element).find('a.remove-event').attr("data-plot-id", this.plot.id);
   $(this.element).find('a.remove-event').attr("data-event-id", newid);
   $(this.element).find('input.event-num').attr("name", "plot[" + this.plot.id + "]event").val(newid);
@@ -324,11 +363,18 @@ HistoryEvent.prototype.setid = function(newid) {
 
 HistoryEvent.prototype.setText = function(text) {
   this.text = text;
+  this.plot.refreshMarkers();
 };
 
 HistoryEvent.prototype.setTimestamp = function(timestamp) {
   this.timestamp = timestamp;
+  this.plot.refreshMarkers();
 };
+
+HistoryEvent.prototype.setTimestampString = function(timestring) {
+  var timestamp = Date.parse(timestring);
+  this.setTimestamp(timestamp);
+}
 
 HistoryEvent.prototype.readFromElement = function() {
   var elem = this.element;
@@ -423,6 +469,18 @@ $( window ).load(function() {
     var eventid = $(this).data('event-id');
     report.history_plots[plotid].removeEvent(eventid);
     return false;
+  });
+  
+  $('div#report_items').on('change', 'input.event-text', function() {
+    var plotid = $(this).parent().data('plot-id');
+    var eventid = $(this).parent().data('event-id');
+    report.history_plots[plotid].events[eventid].setText($(this).val());
+  });
+  
+  $('div#report_items').on('change', 'input.event-timestamp', function() {
+    var plotid = $(this).parent().data('plot-id');
+    var eventid = $(this).parent().data('event-id');
+    report.history_plots[plotid].events[eventid].setTimestampString($(this).val());
   });
   
   $('input#start').on('change', function() {
