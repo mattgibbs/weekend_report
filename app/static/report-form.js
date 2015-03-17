@@ -46,16 +46,19 @@ Report.prototype.addNewProgram = function() {
   newProg.setid('new' + Date.now());
   this.programs[newProg.id] = newProg;
   $(newProgElem).appendTo('div#report_items');
-  console.log(this)
 };
 
 Report.prototype.removeProgram = function(progid) {
   $(this.programs[progid].element).remove();
-  delete this.programs[progid];
 }
 
-Report.prototype.addHistoryPlot = function(plot) {
-  this.history_plots.push(plot);
+Report.prototype.addNewHistoryPlot = function(plot) {
+  var blankPlotElem = $('div#blank-history-plot > div.history-row');
+  var newPlotElem = blankPlotElem.clone();
+  var newPlot = new HistoryPlot(newPlotElem);
+  newPlot.setid('new' + Date.now());
+  this.history_plots[newPlot.id] = newPlot;
+  $(newPlotElem).appendTo('div#report_items');
 };
 
 Report.prototype.removeHistoryPlot = function(plotid) {
@@ -214,6 +217,19 @@ HistoryPlot.prototype.readFromElement = function(elem) {
   });
 };
 
+HistoryPlot.prototype.setid = function(newid) {
+  this.id = newid;
+  $(this.element).attr('data-plot-id', newid);
+  $(this.element).find('input.plot-number').val(newid);
+  $(this.element).find('input.ordering-number').attr('name', 'plot-order-' + newid).val(this.displayOrder);
+  $(this.element).find('input.pv').attr('name', 'pv-' + newid);
+  var new_event_id = 'new' + Date.now();
+  $(this.element).find('input.event-num').attr('name', 'plot[' + newid + ']event').val(new_event_id);
+  $(this.element).find('input.event-text').attr('name', 'plot[' + newid + ']event[' + new_event_id + ']-text');
+  $(this.element).find('input.event-timestamp').attr('name', 'plot[' + newid + ']event[' + new_event_id + ']-timestamp');
+  $(this.element).find('div.history-plot').attr('id', 'history-' + newid);
+}
+
 HistoryPlot.prototype.setPV = function(pv) {
   this.pv = pv;
 };
@@ -273,6 +289,11 @@ $( window ).load(function() {
   
   $('a#add-program').on('click', function () {
     report.addNewProgram();
+    return false;
+  });
+  
+  $('a#add-history-plot').on('click', function() {
+    report.addNewHistoryPlot();
     return false;
   });
   
