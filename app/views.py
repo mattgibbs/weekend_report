@@ -21,7 +21,7 @@ def show_report(reportid = None):
   
 @app.route('/reports/new/')
 def new_report():
-  return render_template("report_form.html", report=None)
+  return render_template("new_report.html", report=None)
   
 @app.route('/create/', methods=['POST'])
 def create_report():
@@ -44,10 +44,10 @@ def edit_report(reportid = None):
   report = db.session.query(models.Report).get(reportid)
   if report == None:
     abort(404)
-  return render_template("report_form.html", report = report)
+  return render_template("edit_report.html", report = report)
   
 @app.route('/reports/<int:reportid>/', methods=['POST'])
-def update_report():
+def update_report(reportid = None):
   report = db.session.query(models.Report).get(reportid)
   if report == None:
     abort(404)
