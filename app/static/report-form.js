@@ -258,7 +258,7 @@ HistoryPlot.prototype.readFromElement = function(elem) {
 };
 
 HistoryPlot.prototype.addNewEvent = function() {
-  var blankEvent = $('div#blank-history-plot > div.history-row').find('div.add-event').clone().show();
+  var blankEvent = $('div#blank-history-plot > div.history-row').find('div.add-event').clone();
   var newEventID = 'new' + Date.now();
   var newEvent = new HistoryEvent(this, blankEvent);
   newEvent.setid(newEventID);
