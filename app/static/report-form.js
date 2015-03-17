@@ -70,6 +70,17 @@ Report.prototype.addNewHistoryPlot = function(plot) {
   var newPlot = new HistoryPlot(this, newPlotElem);
   newPlot.setid('new' + Date.now());
   this.history_plots[newPlot.id] = newPlot;
+  $(newPlot.element).find('div.add-event').each(function(i, event_element) {
+    var newEvent = new HistoryEvent(newPlot, event_element);
+    if ($(event_element).find('input.event-num').val() === "") {
+      var new_event_id = "new" + Date.now();
+      newEvent.setid(new_event_id);
+    }
+    newEvent.readFromElement();
+    if (newEvent.id) {
+      newPlot.events[newEvent.id] = newEvent;
+    }
+  });
   $(newPlotElem).appendTo('div#report_items');
   console.log(this.history_plots);
 };
@@ -282,6 +293,7 @@ HistoryPlot.prototype.setid = function(newid) {
   $(this.element).find('input.ordering-number').attr('name', 'plot-order-' + newid).val(this.displayOrder);
   $(this.element).find('input.pv').attr('name', 'pv-' + newid);
   var new_event_id = 'new' + Date.now();
+  $(this.element).find('div.add-event').attr('data-plot-id', newid).attr('data-event-id', new_event_id);
   $(this.element).find('input.event-num').attr('name', 'plot[' + newid + ']event').val(new_event_id);
   $(this.element).find('input.event-text').attr('name', 'plot[' + newid + ']event[' + new_event_id + ']-text');
   $(this.element).find('input.event-timestamp').attr('name', 'plot[' + newid + ']event[' + new_event_id + ']-timestamp');
