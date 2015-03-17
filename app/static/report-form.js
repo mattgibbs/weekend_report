@@ -215,7 +215,7 @@ var HistoryPlot = function(report, elem) {
   this.pv = null;
   this.report = report;
   this.plotData = null;
-  this.events = [];
+  this.events = {};
   this.displayOrder = null;
   this.element = elem
 };
@@ -226,13 +226,31 @@ HistoryPlot.prototype.readFromElement = function(elem) {
   this.id = $(elem).data("plot-id");
   this.pv = $(elem).find('input.pv').val();
   this.displayOrder = parseInt($(elem).find('input.ordering-number').val(), 10);
-  $(elem).find('div.add-event').each(function(i, event) {
-    var newEvent = new HistoryEvent(event);
+  $(elem).find('div.add-event').each(function(i, event_element) {
+    var newEvent = new HistoryEvent(plot, event_element);
+    if ($(event_element).find('input.event-num').val() === "") {
+      var new_event_id = "new" + Date.now();
+      newEvent.setid(new_event_id);
+    }
     newEvent.readFromElement();
     if (newEvent.id) {
-      plot.events.push(newEvent);
+      plot.events[newEvent.id] = newEvent;
     }
   });
+};
+
+HistoryPlot.prototype.addNewEvent = function() {
+  var blankEvent = $('div#blank-history-plot > div.history-row').find('div.add-event').clone().show();
+  var newEventID = 'new' + Date.now();
+  var newEvent = new HistoryEvent(this, blankEvent);
+  newEvent.setid(newEventID);
+  this.events[newEvent.id] = newEvent;
+  $(newEvent.element).appendTo($(this.element).find('div.events'));
+};
+
+HistoryPlot.prototype.removeEvent = function(eventid) {
+  $(this.events[eventid].element).remove();
+  delete this.events[eventid];
 };
 
 HistoryPlot.prototype.setid = function(newid) {
@@ -245,6 +263,8 @@ HistoryPlot.prototype.setid = function(newid) {
   $(this.element).find('input.event-num').attr('name', 'plot[' + newid + ']event').val(new_event_id);
   $(this.element).find('input.event-text').attr('name', 'plot[' + newid + ']event[' + new_event_id + ']-text');
   $(this.element).find('input.event-timestamp').attr('name', 'plot[' + newid + ']event[' + new_event_id + ']-timestamp');
+  $(this.element).find('a.remove-event').attr('data-plot-id', newid).attr('data-event-id', new_event_id);
+  $(this.element).find('a.add-event').attr('data-plot-id', newid);
   $(this.element).find('div.history-plot').attr('id', 'history-' + newid);
 };
 
@@ -280,16 +300,27 @@ HistoryPlot.prototype.plot = function() {
       min_y: 0,
       area: true
     });
-    $(this_plot.element).find('div.add-event').show();
+    $(this_plot.element).find('div.event-container').show();
   });
 };
 
-var HistoryEvent = function(elem) {
+var HistoryEvent = function(plot, elem) {
   this.id = null;
+  this.plot = plot;
   this.text = null;
   this.timestamp = null;
   this.element = elem;
 };
+
+HistoryEvent.prototype.setid = function(newid) {
+  this.id = newid;
+  $(this.element).attr("data-event-id", newid);
+  $(this.element).find('a.remove-event').attr("data-plot-id", this.plot.id);
+  $(this.element).find('a.remove-event').attr("data-event-id", newid);
+  $(this.element).find('input.event-num').attr("name", "plot[" + this.plot.id + "]event").val(newid);
+  $(this.element).find('input.event-text').attr("name", "plot[" + this.plot.id + "]event[" + newid + "]-text");
+  $(this.element).find('input.event-timestamp').attr("name", "plot[" + this.plot.id + "]event[" + newid + "]-timestamp");
+}
 
 HistoryEvent.prototype.setText = function(text) {
   this.text = text;
@@ -378,6 +409,19 @@ $( window ).load(function() {
     var plot = report.history_plots[plotid];
     plot.pv = pv;
     plot.plot();
+    return false;
+  });
+  
+  $('div#report_items').on('click', 'a.add-event', function() {
+    var plotid = $(this).data('plot-id');
+    report.history_plots[plotid].addNewEvent();
+    return false;
+  });
+  
+  $('div#report_items').on('click', 'a.remove-event', function() {
+    var plotid = $(this).data('plot-id');
+    var eventid = $(this).data('event-id');
+    report.history_plots[plotid].removeEvent(eventid);
     return false;
   });
   
