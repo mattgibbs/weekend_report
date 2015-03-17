@@ -13,7 +13,7 @@
         </div>
       {% endfor %}
     {% else %}
-      <div class="add-event">
+      <div class="add-event" {% if not report_item %}style="display: none;"{% endif %}>
         <input class="event-num" type="hidden" name="plot[]event" value="">
         <input class="event-text" name="plot[]event[]-text" placeholder="Event Text"> 
         <input class="event-timestamp" name="plot[]event[]-timestamp" placeholder="Feb 22, 2015 13:30:00">
