@@ -28,24 +28,7 @@
   </div>
   
   <div id="blank-history-plot" style="display: none;">
-    <div class="history-row row" >
-      <div class="col-sm-12">
-        <input class="plot-number" type="hidden" name="history_plot" value="">
-        <input class="ordering-number" type="hidden" name="plot-order-" value="">
-        <input name="pv-" placeholder="Enter a PV" size="40"> <a class="plot-pv" href="#">Plot PV</a>
-        <div class="add-event" style="display: none;">
-          <input class="event-num" type="hidden" name="plot[]event" value="">
-          <input class="event-text" name="plot[]event[]-text" placeholder="Event Text"> 
-          <input class="event-timestamp" name="plot[]event[]-timestamp" placeholder="Feb 22, 2015 13:30:00">
-          <a class="add-event" href="#">Add Event</a>
-        </div>
-      </div>
-      <div class="col-sm-12">
-        <div class="history-plot mg-main-area-solid" id='history-'>
-
-        </div>
-      </div>
-    </div>
+    {% include "history_plot_form.html" %}
   </div>
 </form>
 {% endblock %}

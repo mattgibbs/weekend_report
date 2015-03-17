@@ -1,9 +1,9 @@
-<div class="history-row row" data-plot-id="{{ report_item.id }}">
-  <input class="plot-number" type="hidden" name="history_plot" value="{{ report_item.id }}">
-  <input class="ordering-number" type="hidden" name="plot-order-" value="{{ report_item.display_order }}">
+<div class="history-row row" data-plot-id="{{ report_item.id if report_item else '' }}">
+  <input class="plot-number" type="hidden" name="history_plot" value="{{ report_item.id if report_item else '' }}">
+  <input class="ordering-number" type="hidden" name="plot-order-" value="{{ report_item.display_order if report_item else '' }}">
   <div class="col-sm-11">
-    <input class="pv" name="pv-" placeholder="Enter a PV" size="40" value="{{ report_item.pv }}"> <a class="plot-pv" href="#">Plot PV</a>
-    {% if report_item.events.count() > 0 %}
+    <input class="pv" name="pv-" placeholder="Enter a PV" size="40" value="{{ report_item.pv if report_item else '' }}"> <a class="plot-pv" href="#">Plot PV</a>
+    {% if report_item and report_item.events.count() > 0 %}
       {% for event in report_item.events %}
         <div class="add-event">
             <input class="event-num" type="hidden" name="plot[]event" value=" {{ event.id }}">
@@ -25,7 +25,8 @@
     <a href="#" class="remove-plot">Remove</a>
   </div>
   <div class="col-sm-12">
-    <div class="history-plot mg-main-area-solid" id="history-{{ report_item.id }}">
+    <div class="history-plot mg-main-area-solid" id="history-{{ report_item.id if report_item else '' }}">
+      {% if report_item %}
       <script type="text/javascript">
       d3.json('http://lcls-archapp.slac.stanford.edu/retrieval/data/getData.json?pv=mean_360({{ report_item.pv }})&from={{ report_item.report.start.isoformat() }}.000Z&to={{report_item.report.end.isoformat()}}.000Z', function(data) {
         var time_series = data[0].data.map(function(item) {
@@ -49,6 +50,7 @@
         });
       });
       </script>
+      {% endif %}
     </div>
   </div>
 </div>
