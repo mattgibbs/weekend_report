@@ -2,6 +2,8 @@
 var Report = function() {
   this.programs = {};
   this.history_plots = {};
+  this.startDate = null;
+  this.endDate = null;
 };
 
 Report.prototype.items = function() {
@@ -55,7 +57,7 @@ Report.prototype.removeProgram = function(progid) {
 Report.prototype.addNewHistoryPlot = function(plot) {
   var blankPlotElem = $('div#blank-history-plot > div.history-row');
   var newPlotElem = blankPlotElem.clone();
-  var newPlot = new HistoryPlot(newPlotElem);
+  var newPlot = new HistoryPlot(this, newPlotElem);
   newPlot.setid('new' + Date.now());
   this.history_plots[newPlot.id] = newPlot;
   $(newPlotElem).appendTo('div#report_items');
@@ -77,7 +79,7 @@ Report.prototype.readFromElement = function(elem) {
       }
       
     } else if ($(report_item).hasClass('history-row')) {
-      var history_plot_to_add = new HistoryPlot(report_item);
+      var history_plot_to_add = new HistoryPlot(report, report_item);
       history_plot_to_add.readFromElement();
       if (history_plot_to_add.id) {
         report.history_plots[history_plot_to_add.id] = history_plot_to_add;
@@ -194,9 +196,11 @@ Note.prototype.readFromElement = function() {
   this.text = $(elem).find('input.other_note').val();
 };
 
-var HistoryPlot = function(elem) {
+var HistoryPlot = function(report, elem) {
   this.id = null;
   this.pv = null;
+  this.report = report;
+  this.plotData = null;
   this.events = [];
   this.displayOrder = null;
   this.element = elem
@@ -228,10 +232,42 @@ HistoryPlot.prototype.setid = function(newid) {
   $(this.element).find('input.event-text').attr('name', 'plot[' + newid + ']event[' + new_event_id + ']-text');
   $(this.element).find('input.event-timestamp').attr('name', 'plot[' + newid + ']event[' + new_event_id + ']-timestamp');
   $(this.element).find('div.history-plot').attr('id', 'history-' + newid);
-}
+};
 
 HistoryPlot.prototype.setPV = function(pv) {
   this.pv = pv;
+};
+
+HistoryPlot.prototype.plot = function() {
+  var this_plot = this;
+  if (this.element === null || this.pv === null || this.report.startDate == null || 
+      this.report.endDate == null || isNaN(this.report.startDate.getTime()) || isNaN(this.report.endDate.getTime())) {
+    return false;
+  }
+  var archiver_url = 'http://lcls-archapp.slac.stanford.edu/retrieval/data/getData.json?pv=mean_360(' + this.pv + ')' +
+                      '&from='+this.report.startDate.toISOString()+
+                      '&to='+this.report.endDate.toISOString();
+  
+  d3.json(archiver_url, function(data) {
+    var time_series = data[0].data.map(function(item) {
+      return {"date": new Date(item.secs * 1000), "val": item.val};
+    });
+    this_plot.plotData = MG.data_graphic({
+      title: this_plot.pv,
+      data: time_series,
+      markers: [],
+      width: 800,
+      full_width: true,
+      height: 260,
+      target: '#history-' + this_plot.id,
+      x_accessor: 'date',
+      y_accessor: 'val',
+      min_x: time_series[0].date,
+      min_y: 0,
+      area: true
+    });
+    $(this_plot.element).find('div.add-event').show();
+  });
 };
 
 var HistoryEvent = function(elem) {
@@ -319,6 +355,15 @@ $( window ).load(function() {
     var progid = $(this).parent().parent().parent().parent().data('prog-id');
     var noteid = $(this).prev().prev().val();
     report.programs[progid].removeNote(noteid);
+    return false;
+  });
+  
+  $('div#report_items').on('click', 'a.plot-pv', function() {
+    var plotid = $(this).parent().parent().data('plot-id');
+    var pv = $(this).prev().val();
+    var plot = report.history_plots[plotid];
+    plot.pv = pv;
+    plot.plot();
     return false;
   });
   
