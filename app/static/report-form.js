@@ -519,4 +519,10 @@ $( window ).load(function() {
     }
   });
   
+  $("a#save-report").on('click', function() {
+    var saved_form = $('form#report').serialize();
+    localStorage.setItem('temp_form', JSON.stringify(saved_form));
+    $('form#report').submit();
+  });
+  
 });
