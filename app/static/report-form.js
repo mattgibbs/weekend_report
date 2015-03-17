@@ -31,14 +31,24 @@ Report.prototype.allPlots = function() {
     }
   }
   return allPlots;
-}
+};
+
+Report.prototype.redrawAllPlots = function() {
+  for (var key in this.history_plots) {
+    if (this.history_plots.hasOwnProperty(key)) {
+      this.history_plots[key].plot();
+    }
+  }
+};
 
 Report.prototype.setStartDate = function(startDate) {
-  this.startDate = startDate;
+  this.startDate = this.parseStartEndString(startDate);
+  this.redrawAllPlots();
 };
 
 Report.prototype.setEndDate = function(endDate) {
-  this.endDate = endDate;
+  this.endDate = this.parseStartEndString(endDate);
+  this.redrawAllPlots();
 };
 
 Report.prototype.addNewProgram = function() {
@@ -61,12 +71,18 @@ Report.prototype.addNewHistoryPlot = function(plot) {
   newPlot.setid('new' + Date.now());
   this.history_plots[newPlot.id] = newPlot;
   $(newPlotElem).appendTo('div#report_items');
+  console.log(this.history_plots);
 };
 
 Report.prototype.removeHistoryPlot = function(plotid) {
   $(this.history_plots[plotid].element).remove();
   delete this.history_plots[plotid];
-}
+};
+
+Report.prototype.parseStartEndString = function(datestring) {
+  var dateParts = datestring.split("/");
+  return new Date(dateParts[2], (dateParts[0] - 1), dateParts[1],8);
+};
 
 Report.prototype.readFromElement = function(elem) {
   var report = this;
@@ -86,10 +102,8 @@ Report.prototype.readFromElement = function(elem) {
       }
     }
   });
-  var startDateParts = $(elem).find('input#start').val().split("/");
-  this.startDate = new Date(startDateParts[2], (startDateParts[0] - 1), startDateParts[1],8);
-  var endDateParts = $(elem).find('input#end').val().split("/");
-  this.endDate = new Date(endDateParts[2], (endDateParts[0] - 1), endDateParts[1],8);
+  this.startDate = this.parseStartEndString($(elem).find('input#start').val());
+  this.endDate = this.parseStartEndString($(elem).find('input#end').val());
 };
 
 var Program = function(elem) {
@@ -365,6 +379,14 @@ $( window ).load(function() {
     plot.pv = pv;
     plot.plot();
     return false;
+  });
+  
+  $('input#start').on('change', function() {
+    report.setStartDate($(this).val());
+  });
+  
+  $('input#end').on('change', function() {
+    report.setEndDate($(this).val());
   });
   
 });
