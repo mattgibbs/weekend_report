@@ -7,8 +7,8 @@ class Program(db.Model):
   time_note = db.Column(db.String(140))
   config_note = db.Column(db.String(140))
   performance_note = db.Column(db.String(140))
-  other_notes = db.relationship('Note', backref='program', lazy='dynamic')
-  downtime_data = db.relationship('DowntimeData', uselist=False, backref='program')
+  other_notes = db.relationship('Note', backref='program', lazy='dynamic', cascade="all, delete, delete-orphan", single_parent=True)
+  downtime_data = db.relationship('DowntimeData', uselist=False, backref='program', cascade="all, delete, delete-orphan", single_parent=True)
   display_order = db.Column(db.Integer)
   
   def name_without_whitespace(self):
