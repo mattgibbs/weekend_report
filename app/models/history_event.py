@@ -8,3 +8,6 @@ class HistoryEvent(db.Model):
   
   def utc_iso_string(self):
     return self.timestamp.isoformat() + '.000Z'
+    
+  def __repr__(self):
+    return "<HistoryEvent id: {0} history_plot_id: {1}>".format(self.id, self.history_plot)
