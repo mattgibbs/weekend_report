@@ -33,6 +33,11 @@ Report.prototype.allPlots = function() {
   return allPlots;
 };
 
+Report.prototype.displayOrderForNewItem = function() {
+  var itemCount = this.allPrograms().length + this.allPlots().length;
+  return itemCount + 1;
+};
+
 Report.prototype.redrawAllPlots = function() {
   for (var key in this.history_plots) {
     if (this.history_plots.hasOwnProperty(key)) {
@@ -55,6 +60,7 @@ Report.prototype.addNewProgram = function() {
   var blankProgElem = $('div#blank-program > div.program-row');
   var newProgElem = blankProgElem.clone();
   var newProg = new Program(newProgElem);
+  newProg.displayOrder = this.displayOrderForNewItem();
   newProg.setid('new' + Date.now());
   this.programs[newProg.id] = newProg;
   $(newProgElem).appendTo('div#report_items');
@@ -68,6 +74,7 @@ Report.prototype.addNewHistoryPlot = function(plot) {
   var blankPlotElem = $('div#blank-history-plot > div.history-row');
   var newPlotElem = blankPlotElem.clone();
   var newPlot = new HistoryPlot(this, newPlotElem);
+  newPlot.displayOrder = this.displayOrderForNewItem();
   newPlot.setid('new' + Date.now());
   this.history_plots[newPlot.id] = newPlot;
   $(newPlot.element).find('div.add-event').each(function(i, event_element) {
