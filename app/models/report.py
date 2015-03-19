@@ -33,56 +33,117 @@ class Report(db.Model):
     self.end = timeconverter.convert_to_UTC(local_end)
   
     programs = filter(None, form.getlist('program'))
+    self.programs = []
     for program_number in programs:
-      new_program = Program()
-      new_program.report = self
-      new_program.name = form['name-' + program_number]
-      new_program.time_note = form['time_note-' + program_number]
-      new_program.config_note = form['config_note-' + program_number]
-      new_program.performance_note = form['performance_note-' + program_number]
+      programid = -1
       try:
-        new_program.display_order = int(form['program-order-' + program_number])
+        programid = int(program_number)
+      except:
+        #If the id isnt an integer, we'll just assume this is a new program.
+        pass
         
+      prog = Program.query.get(programid)
+      if not prog:
+        prog = Program()
+      
+      prog.name = form['name-' + program_number]
+      prog.time_note = form['time_note-' + program_number]
+      prog.config_note = form['config_note-' + program_number]
+      prog.performance_note = form['performance_note-' + program_number]
+      try:
+        prog.display_order = int(form['program-order-' + program_number])
       except ValueError:
         pass
-      other_notes = filter(None, form.getlist('other_note-' + program_number))
-      for other_note in other_notes:
-        new_note = Note()
-        new_note.program = new_program
-        new_note.text = other_note
+      prog.report = self
+      
+      other_note_numbers = filter(None, form.getlist('program[' + program_number + ']note'))
+      prog.other_notes = []
+      for other_note_number in other_note_numbers:
+        noteid = -1
+        try:
+          noteid = int(other_note_number)
+        except ValueError:
+          print("Couldn't convert " + other_note_number + " to int.")
+        
+        note = Note.query.get(noteid)
+        #If we didn't get a note back in the query, assume that means we need to make a new note.
+        if not note:
+          note = Note()
+        
+        note_text = form["program[{0}]note[{1}]-text".format(program_number, other_note_number)]
+        #If the note from the form has no text, we just ignore it.
+        if note_text:
+          note.program = prog
+          note.text = note_text
+          
       new_downtime = DowntimeData()
-      new_downtime.program = new_program
+      prog.downtime_data = None
       if form['downtime-' + program_number]:
-        new_downtime.downtime = float(form['downtime-' + program_number])
+        try:
+          new_downtime.downtime = float(form['downtime-' + program_number])
+        except ValueError:
+          new_downtime.downtime = None
       else:
-        new_downtime.downtime = 0
+        new_downtime.downtime = None
       if form['config_changes-' + program_number]:
-        new_downtime.config_changes = float(form['config_changes-' + program_number])
+        try:
+          new_downtime.config_changes = float(form['config_changes-' + program_number])
+        except ValueError:
+          new_downtime.config_changes = None
       else:
-        new_downtime.config_changes = 0
+        new_downtime.config_changes = None
       if form['delivered-' + program_number]:
-        new_downtime.delivered = float(form['delivered-' + program_number])
+        try:
+          new_downtime.delivered = float(form['delivered-' + program_number])
+        except ValueError:
+          new_downtime.delivered = None
       else:
-        new_downtime.delivered = 0
+        new_downtime.delivered = None
+      new_downtime.program = prog
       
     history_plots = filter(None, form.getlist('history_plot'))
+    self.history_plots = []
     for plot_number in history_plots:
-      new_plot = HistoryPlot()
-      new_plot.report = self
-      new_plot.pv = form['pv-' + plot_number]
+      plot = None
       try:
-        new_plot.display_order = int(form['plot-order-' + plot_number])
+        plotid = int(plot_number)
+        plot = HistoryPlot.query.get(plotid)
       except ValueError:
         pass
+        
+      if not plot:
+        plot = HistoryPlot()
+        
+      plot.report = self
+      if not form['pv-' + plot_number]:
+        continue
+      plot.pv = form['pv-' + plot_number]
+      
+      
+      try:
+        plot.display_order = int(form['plot-order-' + plot_number])
+      except ValueError:
+        pass
+        
       events = form.getlist("plot[{0}]event".format(plot_number))
+      plot.events = []
       for event_number in events:
-        new_event = HistoryEvent()
-        new_event.text = form["plot[{0}]event[{1}]-text".format(plot_number, event_number)]
-        if not new_event.text:
+        event = None
+        try:
+          eventid = int(event_number)
+          event = HistoryEvent.query.get(eventid)
+        except ValueError:
+          pass
+          
+        if not event:
+          event = HistoryEvent()
+          
+        event.text = form["plot[{0}]event[{1}]-text".format(plot_number, event_number)]
+        if not event.text:
           continue
         local_timestring = form["plot[{0}]event[{1}]-timestamp".format(plot_number, event_number)]
         if not local_timestring:
           continue
-        new_event.history_plot = new_plot
+        event.history_plot = plot
         local_timestamp = parser.parse(local_timestring, ignoretz = True)
-        new_event.timestamp = timeconverter.convert_to_UTC(local_timestamp)
+        event.timestamp = timeconverter.convert_to_UTC(local_timestamp)

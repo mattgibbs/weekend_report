@@ -51,4 +51,15 @@ def update_report(reportid = None):
   report = db.session.query(models.Report).get(reportid)
   if report == None:
     abort(404)
-  abort(404)
+  report.from_form(request.form)
+  db.session.commit()
+  flash('Report saved. <a href="' + url_for('show_report', reportid = report.id) + '">Click here to view it.</a>')
+  return redirect(url_for('report_index'))
+  
+  
+  #try:
+  #  report.from_form(request.form)
+  #  db.session.commit()
+  #except:
+  #  db.session.rollback()
+  #  raise
