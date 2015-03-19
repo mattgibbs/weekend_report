@@ -155,8 +155,8 @@ Program.prototype.readFromElement = function() {
   $(elem).find('li.other_note').each(function(i, note) {
     var note_to_add = new Note(this);
     note_to_add.readFromElement();
+    note_to_add.setProgramid(prog.id);
     if (note_to_add.id) {
-      note_to_add.programid = prog.id;
       prog.notes.push(note_to_add);
     }
   });
@@ -191,7 +191,7 @@ Program.prototype.addNewNote = function() {
   var note_list = $(this.element).find('ul.notes-list');
   var new_note_element = $('div#blank-program > div.program-row').find('ul.notes-list').children().last().clone();
   var newNote = new Note(new_note_element);
-  newNote.programid = this.id;
+  newNote.setProgramid(this.id);
   newNote.setid('new' + Date.now());
   newNote.setText('');
   this.notes.push(newNote);
@@ -228,6 +228,11 @@ Note.prototype.setid = function(newid) {
   $(this.element).find('input.note_id').val(this.id);
   $(this.element).find('input.other_note').attr("name", "program[" + this.programid + "]note[" + this.id + "]-text");
 };
+
+Note.prototype.setProgramid = function(progid) {
+  this.programid = progid;
+  $(this.element).find('input.note_id').attr("name", "program[" + progid + "]note");
+}
 
 Note.prototype.readFromElement = function() {
   var elem = this.element;
