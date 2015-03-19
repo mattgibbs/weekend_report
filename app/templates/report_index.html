@@ -11,7 +11,7 @@
 <div class="row">
   <ul class="report-list">
   {% for r in reports %}
-    <li><a href="{{ url_for('show_report', reportid = r.id) }}">{{ r.start }} to {{ r.end }}</a></li>
+    <li><a href="{{ url_for('show_report', reportid = r.id) }}">{{ r.local_start() }} to {{ r.local_end() }}</a> <a href="{{ url_for('edit_report', reportid = r.id) }}">(Edit)</a></li>
   {% endfor %}
   </ul>
 </div>

@@ -15,6 +15,12 @@ class Report(db.Model):
   programs = db.relationship('Program', backref='report', lazy='dynamic', cascade="all, delete, delete-orphan")
   history_plots = db.relationship('HistoryPlot', backref='report', lazy='dynamic', cascade="all, delete, delete-orphan")
   
+  def local_start(self):
+    return timeconverter.convert_to_local(self.start)
+    
+  def local_end(self):
+    return timeconverter.convert_to_local(self.end)
+  
   def report_items(self):
     report_items = []
     report_items.extend(self.programs.all())
