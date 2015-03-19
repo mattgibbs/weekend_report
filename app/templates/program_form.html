@@ -21,15 +21,15 @@
       {% if report_item and report_item.other_notes.count() > 0 %}
         {% for note in report_item.other_notes %}
           <li class="other_note">
-            <input class="note_id" type="hidden" name="note" value="{{ note.id }}">
+            <input class="note_id" type="hidden" name="program[{{ report_item.id }}]note" value="{{ note.id }}">
             <input class="other_note" name="program[{{ report_item.id }}]note[{{ note.id }}]-text" placeholder="Note" size="80" value="{{ note.text }}">
             <a href="#" class="remove-note">Remove Note</a>
           </li>
         {% endfor %}
       {% else %}
-        <li>
-          <input class="note_id" type="hidden" name="note" value="new">
-          <input class="other_note" name="program[{{ report_item.id  if report_item else ''}}]note[]-text" placeholder="Note" size="80">
+        <li class="other_note">
+          <input class="note_id" type="hidden" name="program[{{ report_item.id if reort_item else ''}}]note" value="new">
+          <input class="other_note" name="program[{{ report_item.id if report_item else ''}}]note[]-text" placeholder="Note" size="80">
           <a href="#" class="remove-note">Remove Note</a>
         </li>
       {% endif %}
