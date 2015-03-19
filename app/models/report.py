@@ -25,12 +25,11 @@ class Report(db.Model):
   def from_form(self, form):
     #Parse the start time string and convert to UTC before storing it.
     local_start = parser.parse(form['start'], ignoretz = True)
-    local_start.replace(hour=8)
+    local_start = local_start.replace(hour=8)
     self.start = timeconverter.convert_to_UTC(local_start)
-  
     #Parse the end time string and convert to UTC before storing it.
     local_end = parser.parse(form['end'], ignoretz = True)
-    local_end.replace(hour=8)
+    local_end = local_end.replace(hour=8)
     self.end = timeconverter.convert_to_UTC(local_end)
   
     programs = filter(None, form.getlist('program'))
