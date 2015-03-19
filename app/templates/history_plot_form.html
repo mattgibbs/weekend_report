@@ -1,14 +1,14 @@
 <div class="history-row row" data-plot-id="{{ report_item.id if report_item else '' }}">
   <input class="plot-number" type="hidden" name="history_plot" value="{{ report_item.id if report_item else '' }}">
-  <input class="ordering-number" type="hidden" name="plot-order-" value="{{ report_item.display_order if report_item else '' }}">
+  <input class="ordering-number" type="hidden" name="plot-order-{{ report_item.id if report_item else '' }}" value="{{ report_item.display_order if report_item else '' }}">
   <div class="col-sm-11">
-    <input class="pv" name="pv-" placeholder="Enter a PV" size="40" value="{{ report_item.pv if report_item else '' }}"> <a class="plot-pv" href="#">Plot PV</a>
+    <input class="pv" name="pv-{{ report_item.id if report_item else '' }}" placeholder="Enter a PV" size="40" value="{{ report_item.pv if report_item else '' }}"> <a class="plot-pv" href="#">Plot PV</a>
     <div class="event-container" {% if not report_item %}style="display: none;"{% endif %}>
       <div class="events">
       {% if report_item and report_item.events.count() > 0 %}
         {% for event in report_item.events %}
           <div class="add-event" data-plot-id="{{ report_item.id }}" data-event-id="{{ event.id }}">
-              <input class="event-num" type="hidden" name="plot[{{ report_item.id }}]event" value=" {{ event.id }}">
+              <input class="event-num" type="hidden" name="plot[{{ report_item.id }}]event" value="{{ event.id }}">
               <input class="event-text" name="plot[{{ report_item.id }}]event[{{ event.id }}]-text" placeholder="Event Text" value="{{ event.text }}"> 
               <input class="event-timestamp" name="plot[{{ report_item.id }}]event[{{ event.id }}]-timestamp" placeholder="Feb 22, 2015 13:30:00" value="{{ event.timestamp.strftime('%b %d, %Y %H:%M:%S')}}">
               <a class="remove-event" href="#" data-plot-id="{{ report_item.id }}" data-event-id="{{ event.id }}">Remove Event</a>
@@ -16,9 +16,9 @@
         {% endfor %}
       {% else %}
         <div class="add-event">
-          <input class="event-num" type="hidden" name="plot[]event" value="">
-          <input class="event-text" name="plot[]event[]-text" placeholder="Event Text"> 
-          <input class="event-timestamp" name="plot[]event[]-timestamp" placeholder="Feb 22, 2015 13:30:00">
+          <input class="event-num" type="hidden" name="plot[{{ report_item.id if report_item else '' }}]event" value="">
+          <input class="event-text" name="plot[{{ report_item.id if report_item else '' }}]event[]-text" placeholder="Event Text"> 
+          <input class="event-timestamp" name="plot[{{ report_item.id if report_item else '' }}]event[]-timestamp" placeholder="Feb 22, 2015 13:30:00">
           <a class="remove-event" href="#">Remove Event</a>
         </div>
       {% endif %}
