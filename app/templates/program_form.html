@@ -29,7 +29,7 @@
       {% else %}
         <li class="other_note">
           <input class="note_id" type="hidden" name="program[{{ report_item.id if reort_item else ''}}]note" value="new">
-          <input class="other_note" name="program[{{ report_item.id if report_item else ''}}]note[]-text" placeholder="Note" size="80">
+          <input class="other_note" name="program[{{ report_item.id if report_item else ''}}]note[new]-text" placeholder="Note" size="80">
           <a href="#" class="remove-note">Remove Note</a>
         </li>
       {% endif %}
