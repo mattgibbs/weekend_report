@@ -43,7 +43,7 @@
               //Width and height
               var w = 250;
               var h = 250;
-              var dataset = [ {% if report_item.downtime_data.downtime and report_item.downtime_data.downtime > 0 %}{title: "Downtime", value: {{ report_item.downtime_data.downtime }} }, {% endif %}{% if report_item.downtime_data.config_changes and report_item.downtime_data.config_changes > 0 %}{title: "Config Change", value: {{ report_item.downtime_data.config_changes }} }, {% endif %}{% if report_item.downtime_data.delivered and report_item.downtime_data.delivered > 0 %}{title: "Delivered", value: {{ report_item.downtime_data.delivered }} } {% endif %} ];
+              var dataset = [ {% if report_item.downtime_data.downtime and report_item.downtime_data.downtime > 0 %}{title: "Downtime", value: {{ report_item.downtime_data.downtime }} }, {% endif %}{% if report_item.downtime_data.config_changes and report_item.downtime_data.config_changes > 0 %}{title: "Config Changes", value: {{ report_item.downtime_data.config_changes }} }, {% endif %}{% if report_item.downtime_data.delivered and report_item.downtime_data.delivered > 0 %}{title: "Delivered", value: {{ report_item.downtime_data.delivered }} } {% endif %} ];
               makePie('div#{{ report_item.name_without_whitespace() }}-uptime',dataset,w,h);
             </script>
             {% endif %}
