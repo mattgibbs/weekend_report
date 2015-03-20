@@ -4,6 +4,9 @@ var Report = function() {
   this.history_plots = {};
   this.startDate = null;
   this.endDate = null;
+  this.program_totals = {};
+  this.dailyReports = [];
+  this.element = null;
 };
 
 Report.prototype.items = function() {
@@ -46,12 +49,12 @@ Report.prototype.redrawAllPlots = function() {
   }
 };
 
-Report.prototype.setStartDate = function(startDate) {
+Report.prototype.setStartDateString = function(startDate) {
   this.startDate = this.parseStartEndString(startDate);
   this.redrawAllPlots();
 };
 
-Report.prototype.setEndDate = function(endDate) {
+Report.prototype.setEndDateString = function(endDate) {
   this.endDate = this.parseStartEndString(endDate);
   this.redrawAllPlots();
 };
@@ -102,8 +105,18 @@ Report.prototype.parseStartEndString = function(datestring) {
   return new Date(dateParts[2], (dateParts[0] - 1), dateParts[1],8);
 };
 
+Report.prototype.makeDateString = function(date) {
+  var pad = "00";
+  var month = date.getMonth() + 1;
+  var paddedMonth = (pad+month).slice(-pad.length);
+  var day = date.getDate();
+  var paddedDay = (pad+day).slice(-pad.length);
+  return paddedMonth + "/" + paddedDay + "/" + date.getFullYear();
+}
+
 Report.prototype.readFromElement = function(elem) {
   var report = this;
+  this.element = elem;
   $(elem).find('div#report_items').children().each(function(i, report_item) {
     if ($(report_item).hasClass('program-row')) {
       var program_to_add = new Program(report_item);
@@ -129,7 +142,79 @@ Report.prototype.datesValid = function() {
     return false;
   }
   return true;
+};
+
+Report.prototype.useDefaultStartDate = function() {
+  var defaultStart = new Date();
+  
+  //Go back in time until we get to a Friday.
+  //Date.getDay() returns 0 for Sunday, 6 for Saturday.
+  while (defaultStart.getDay() !== 5) {
+    //Subtract one day.
+    defaultStart -= 1000 * 60 * 60 * 24;
+    defaultStart = new Date(today);
+  }
+  defaultStart.setHours(8);
+  defaultStart.setMinutes(0);
+  defaultStart.setSeconds(0);
+  var this_report = this;
+  this.startDate = defaultStart;
+  $(this.element).find('input#start').val(this_report.makeDateString(defaultStart));
 }
+
+Report.prototype.useDefaultEndDate = function() {
+  var defaultEnd = new Date();
+  defaultEnd.setHours(8);
+  defaultEnd.setMinutes(0);
+  defaultEnd.setSeconds(0);
+  var this_report = this;
+  this.endDate = defaultEnd;
+  $(this.element).find('input#end').val(this_report.makeDateString(defaultEnd));
+}
+
+Report.prototype.importDailyReports = function() {
+  var this_report = this;
+  var startDate = this.startDate
+  var endDate = this.endDate
+  startDate.setDate(startDate.getDate() + 1);
+  endDate.setDate(endDate.getDate() + 1);
+  //Get all the daily reports that fall within our weekend report range.
+  console.log("https://mccelog.slac.stanford.edu/elog/dev/mgibbs/mcc_shift_sum/json_report.php?start_date=" + startDate.toISOString() + "&end_date=" + endDate.toISOString());
+  $.ajax({
+    dataType: "json",
+    url: "https://mccelog.slac.stanford.edu/elog/dev/mgibbs/mcc_shift_sum/json_report.php?start_date=" + startDate.toISOString() + "&end_date=" + endDate.toISOString()
+  }).done(function( data ) {
+    this_report.dailyReports = data;
+    //Calculate time accounting totals for each program reported in the daily reports.
+    this_report.program_totals = {};
+    var programs = []; //This is just an array of the keys used to access the data in program_totals.
+    this_report.dailyReports.forEach(function(report) {
+      report['shifts'].forEach(function(shift) {
+        shift['programs'].forEach(function(program) {
+          if (this_report.program_totals[program['name']] == undefined) {
+            programs.push(program['name']);
+            this_report.program_totals[program['name']] = {"delivered": 0, "user_off": 0, "tuning": 0, "config_changes": 0, "down": 0, "off": 0};
+          }
+          this_report.program_totals[program['name']]['delivered'] += parseFloat(program['delivered']);
+          this_report.program_totals[program['name']]['user_off'] += parseFloat(program['user_off']);
+          this_report.program_totals[program['name']]['tuning'] += parseFloat(program['tuning']);
+          this_report.program_totals[program['name']]['config_changes'] += parseFloat(program['config_changes']);
+          this_report.program_totals[program['name']]['down'] += parseFloat(program['down']);
+          this_report.program_totals[program['name']]['off'] += parseFloat(program['off']);
+        });
+      });
+    });
+  
+    //Now that we have all the report totals, we can populate the <option> fields for the import program select fields.
+    programs.forEach(function(program) {
+      $('select.imported-programs').append('<option value="' + program + '">' + program + '</option>');
+    });
+  
+    $('span.import-downtime').show();
+    console.log(this_report.program_totals);
+    console.log(this_report.dailyReports);
+  });
+};
 
 var Program = function(elem) {
   this.id = null;
@@ -451,7 +536,11 @@ DowntimeData.prototype.readFromElement = function() {
 $( window ).load(function() {
   var report = new Report();
   report.readFromElement('form#report');
-  console.log(report);
+  
+  if (!report.datesValid()) {
+    report.useDefaultStartDate();
+    report.useDefaultEndDate();
+  }
   
   $('a#add-program').on('click', function () {
     report.addNewProgram();
@@ -527,18 +616,30 @@ $( window ).load(function() {
     report.history_plots[plotid].setTitle($(this).val());
   });
   
+  $("div#report_items").on('change', 'select.imported-programs', function(){
+    var selected_program = $(this).val();
+    var totals = report.program_totals[selected_program];
+    if (totals === undefined) {
+      return;
+    }
+    $(this).parent().parent().find('input.downtime').val(totals['down'].toFixed(1));
+    $(this).parent().parent().find('input.config_changes').val(totals['config_changes'].toFixed(1));
+    $(this).parent().parent().find('input.delivered').val(totals['delivered'].toFixed(1));
+  });
+  
   $('input#start').on('change', function() {
-    report.setStartDate($(this).val());
+    report.setStartDateString($(this).val());
   });
   
   $('input#end').on('change', function() {
-    report.setEndDate($(this).val());
+    report.setEndDateString($(this).val());
   });
   
   $('a#begin').on('click', function() {
     if (report.datesValid()) {
       $(this).hide();
       $('div.add').show();
+      report.importDailyReports();
     } else {
       alert("Enter valid dates to begin.");
     }
