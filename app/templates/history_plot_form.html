@@ -2,6 +2,9 @@
   <input class="plot-number" type="hidden" name="history_plot" value="{{ report_item.id if report_item else '' }}">
   <input class="ordering-number" type="hidden" name="plot-order-{{ report_item.id if report_item else '' }}" value="{{ report_item.display_order if report_item else '' }}">
   <div class="col-sm-11">
+    <div>
+      <input class="plot-title" name="plot-title-{{ report_item.id if report_item else '' }}" placeholder="Enter a title" size="60" value="{{ report_item.title if report_item else '' }}">
+    </div>
     <input class="pv" name="pv-{{ report_item.id if report_item else '' }}" placeholder="Enter a PV" size="40" value="{{ report_item.pv if report_item else '' }}"> <a class="plot-pv" href="#">Plot PV</a>
     <div class="event-container" {% if not report_item %}style="display: none;"{% endif %}>
       <div class="events">
@@ -38,7 +41,7 @@
           return {"date": new Date(item.secs * 1000), "val": item.val};
         });
         MG.data_graphic({
-          title: "{{ report_item.pv }}",
+          title: "{{ report_item.title or report_item.pv }}",
           data: time_series,
           markers: [{% for event in report_item.events %}
             {'date': new Date('{{ event.utc_iso_string() }}'), 'label': '{{ event.text }}'},

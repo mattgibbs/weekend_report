@@ -80,7 +80,7 @@
                   return {"date": new Date(item.secs * 1000), "val": item.val};
                 });
                 MG.data_graphic({
-                  title: "{{ report_item.pv }}",
+                  title: "{{ report_item.title or report_item.pv }}",
                   data: time_series,
                   markers: [{% for event in report_item.events %}
                     {'date': new Date('{{ event.utc_iso_string() }}'), 'label': '{{ event.text }}'},

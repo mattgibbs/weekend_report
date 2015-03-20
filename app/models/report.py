@@ -124,6 +124,7 @@ class Report(db.Model):
       if not form['pv-' + plot_number]:
         continue
       plot.pv = form['pv-' + plot_number]
+      plot.title = form['plot-title-' + plot_number]
       
       
       try:

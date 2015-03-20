@@ -243,6 +243,7 @@ Note.prototype.readFromElement = function() {
 var HistoryPlot = function(report, elem) {
   this.id = null;
   this.pv = null;
+  this.title = null;
   this.report = report;
   this.plotData = null;
   this.events = {};
@@ -255,6 +256,7 @@ HistoryPlot.prototype.readFromElement = function(elem) {
   var plot = this;
   this.id = $(elem).data("plot-id");
   this.pv = $(elem).find('input.pv').val();
+  this.title = $(elem).find('input.plot-title').val();
   this.displayOrder = parseInt($(elem).find('input.ordering-number').val(), 10);
   $(elem).find('div.add-event').each(function(i, event_element) {
     var newEvent = new HistoryEvent(plot, event_element);
@@ -303,6 +305,7 @@ HistoryPlot.prototype.setid = function(newid) {
   $(this.element).attr('data-plot-id', newid);
   $(this.element).find('input.plot-number').val(newid);
   $(this.element).find('input.ordering-number').attr('name', 'plot-order-' + newid).val(this.displayOrder);
+  $(this.element).find('input.plot-title').attr('name', 'plot-title-' + newid);
   $(this.element).find('input.pv').attr('name', 'pv-' + newid);
   var new_event_id = 'new' + Date.now();
   $(this.element).find('div.add-event').attr('data-plot-id', newid).attr('data-event-id', new_event_id);
@@ -316,6 +319,11 @@ HistoryPlot.prototype.setid = function(newid) {
 
 HistoryPlot.prototype.setPV = function(pv) {
   this.pv = pv;
+};
+
+HistoryPlot.prototype.setTitle = function(title) {
+  this.title = title;
+  this.refreshMarkers();
 };
 
 HistoryPlot.prototype.plot = function() {
@@ -333,7 +341,7 @@ HistoryPlot.prototype.plot = function() {
       return {"date": new Date(item.secs * 1000), "val": item.val};
     });
     this_plot.plotData = MG.data_graphic({
-      title: this_plot.pv,
+      title: this_plot.title || this_plot.pv,
       data: time_series,
       markers: this_plot.plotMarkers(),
       width: 800,
@@ -358,7 +366,7 @@ HistoryPlot.prototype.refreshMarkers = function() {
   }
   var this_plot = this;
   MG.data_graphic({
-    title: this_plot.pv,
+    title: this_plot.title || this_plot.pv,
     data: this_plot.plotData,
     markers: this_plot.plotMarkers(),
     width: 800,
@@ -512,6 +520,11 @@ $( window ).load(function() {
     var plotid = $(this).parent().data('plot-id');
     var eventid = $(this).parent().data('event-id');
     report.history_plots[plotid].events[eventid].setTimestampString($(this).val());
+  });
+  
+  $('div#report_items').on('change', 'input.plot-title', function() {
+    var plotid = $(this).parent().parent().parent().data('plot-id');
+    report.history_plots[plotid].setTitle($(this).val());
   });
   
   $('input#start').on('change', function() {
