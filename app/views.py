@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request, abort
+from flask import render_template, flash, redirect, url_for, request, abort, Markup
 from app import app, db, models
 
 
@@ -36,7 +36,7 @@ def create_report():
     db.session.rollback()
     raise
   
-  flash('New report saved. <a href="' + url_for('show_report', reportid = report.id) + '">Click here to view it.</a>')
+  flash(Markup('New report saved. <a href="' + url_for('show_report', reportid = report.id) + '">Click here to view it.</a>'))
   return redirect(url_for('report_index'))
     
 @app.route('/reports/<int:reportid>/edit/', methods=['GET'])
@@ -53,7 +53,7 @@ def update_report(reportid = None):
     abort(404)
   report.from_form(request.form)
   db.session.commit()
-  flash('Report saved. <a href="' + url_for('show_report', reportid = report.id) + '">Click here to view it.</a>')
+  flash(Markup('Report saved. <a href="' + url_for('show_report', reportid = report.id) + '">Click here to view it.</a>'))
   return redirect(url_for('report_index'))
   
   
