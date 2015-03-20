@@ -8,7 +8,7 @@
   {% for report_item in report.report_items() %}
     {% if report_item.__tablename__ == 'program' %}
       <div class="program-row row">
-        <div class="program-notes col-sm-7">
+        <div class="program-notes col-sm-9">
           <span class="program-name">{{ report_item.name }}</span>
           <table>
             {% if report_item.time_note %}
@@ -36,7 +36,7 @@
             {% endfor %}
           </ul>
         </div>
-        <div class="col-sm-5">
+        <div class="col-sm-3">
           <div class="downtime-chart" id="{{ report_item.name_without_whitespace() }}-uptime">
             {% if report_item.downtime_data.downtime or report_item.downtime_data.config_changes or report_item.downtime_data.delivered %}
             <script type="text/javascript">
