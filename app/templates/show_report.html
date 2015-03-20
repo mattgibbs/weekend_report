@@ -38,6 +38,7 @@
         </div>
         <div class="col-sm-5">
           <div class="downtime-chart" id="{{ report_item.name_without_whitespace() }}-uptime">
+            {% if report_item.downtime_data.downtime or report_item.downtime_data.config_changes or report_item.downtime_data.delivered %}
             <script type="text/javascript">
               //Width and height
               var w = 250;
@@ -45,6 +46,7 @@
               var dataset = [ {% if report_item.downtime_data.downtime and report_item.downtime_data.downtime > 0 %}{title: "Downtime", value: {{ report_item.downtime_data.downtime }} }, {% endif %}{% if report_item.downtime_data.config_changes and report_item.downtime_data.config_changes > 0 %}{title: "Config Change", value: {{ report_item.downtime_data.config_changes }} }, {% endif %}{% if report_item.downtime_data.delivered and report_item.downtime_data.delivered > 0 %}{title: "Delivered", value: {{ report_item.downtime_data.delivered }} } {% endif %} ];
               makePie('div#{{ report_item.name_without_whitespace() }}-uptime',dataset,w,h);
             </script>
+            {% endif %}
           </div>
         </div>
       </div>
