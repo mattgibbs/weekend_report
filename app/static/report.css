@@ -3,7 +3,7 @@ div#heading {
 	margin-bottom: 0.8em;
 }
 .program-name {
-	font-size: 3.3em;
+	font-size: 3.0em;
 	font-weight: bold;
 }
 
@@ -14,23 +14,24 @@ div.program-row, div.history-row {
 }
 
 div.program-notes {
-	font-size: 1.2em;
+	font-size: 1.8em;
 }
 
 div.downtime-chart {
 	padding-top: 1.2em;
+  font-size: 1.5em;
 }
 
 div.history-plot text.mg-marker-text {
-	font-size: 1.2em;
+	font-size: 1.8em;
 }
 
 div.history-plot g.mg-x-axis text {
-	font-size: 0.8em;
+	font-size: 1.0em;
 }
 
 div.history-plot g.mg-y-axis text {
-	font-size: 0.8em;
+	font-size: 1.2em;
 }
 
 div.history-plot h2.mg-chart-title {

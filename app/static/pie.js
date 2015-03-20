@@ -1,6 +1,7 @@
 function makePie(element, dataset, w, h) {
-  var outerRadius = w / 2;
-  var innerRadius = w / 3;
+  var margin = 30;
+  var outerRadius = (w) / 2;
+  var innerRadius = (w) / 3;
   var labelRadius = (outerRadius + innerRadius) / 2;
   var arc = d3.svg.arc()
   				.innerRadius(innerRadius)
@@ -13,7 +14,7 @@ function makePie(element, dataset, w, h) {
   //Easy colors accessible via a 10-step ordinal scale
   //var color = d3.scale.category10();
   var color = d3.scale.ordinal()
-                .domain(["Downtime", "Config Changes", "Delivered"])
+                .domain(["Downtime", "Config Change", "Delivered"])
                 .range(["#fc8d59", "#fee090", "#91bfdb"])
   //Create SVG element
   var svg = d3.select(element)
@@ -53,7 +54,7 @@ function makePie(element, dataset, w, h) {
               centroid = arc.centroid(d);
               midAngle = Math.atan2(centroid[1], centroid[0]);
               x = Math.cos(midAngle) * labelRadius;
-              return (x > 0) ? "start" : "end";
+              return (x > 0) ? "start" : "middle";
             })
             .text(function(d) {
               return d.data.value + " hrs";
@@ -105,7 +106,7 @@ function makePie(element, dataset, w, h) {
   var legendRectSize = 12;
   var legendSpacing = 4;
   var legend = svg.selectAll('.legend')
-                  .data(["Downtime", "Config Changes", "Delivered"])
+                  .data(["Downtime", "Config Change", "Delivered"])
                   .enter()
                   .append('g')
                   .attr('class','legend')
