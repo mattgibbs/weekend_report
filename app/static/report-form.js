@@ -152,7 +152,7 @@ Report.prototype.useDefaultStartDate = function() {
   while (defaultStart.getDay() !== 5) {
     //Subtract one day.
     defaultStart -= 1000 * 60 * 60 * 24;
-    defaultStart = new Date(today);
+    defaultStart = new Date(defaultStart);
   }
   defaultStart.setHours(8);
   defaultStart.setMinutes(0);
