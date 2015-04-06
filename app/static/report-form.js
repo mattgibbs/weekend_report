@@ -164,6 +164,10 @@ Report.prototype.useDefaultStartDate = function() {
 
 Report.prototype.useDefaultEndDate = function() {
   var defaultEnd = new Date();
+  while (defaultEnd.getDay() !== 0) {
+    defaultEnd -= 1000 * 60 * 60 * 24;
+    defaultEnd = new Date(defaultEnd);
+  }
   defaultEnd.setHours(8);
   defaultEnd.setMinutes(0);
   defaultEnd.setSeconds(0);
@@ -190,18 +194,20 @@ Report.prototype.importDailyReports = function() {
     var programs = []; //This is just an array of the keys used to access the data in program_totals.
     this_report.dailyReports.forEach(function(report) {
       report['shifts'].forEach(function(shift) {
-        shift['programs'].forEach(function(program) {
-          if (this_report.program_totals[program['name']] == undefined) {
-            programs.push(program['name']);
-            this_report.program_totals[program['name']] = {"delivered": 0, "user_off": 0, "tuning": 0, "config_changes": 0, "down": 0, "off": 0};
-          }
-          this_report.program_totals[program['name']]['delivered'] += parseFloat(program['delivered']);
-          this_report.program_totals[program['name']]['user_off'] += parseFloat(program['user_off']);
-          this_report.program_totals[program['name']]['tuning'] += parseFloat(program['tuning']);
-          this_report.program_totals[program['name']]['config_changes'] += parseFloat(program['config_changes']);
-          this_report.program_totals[program['name']]['down'] += parseFloat(program['down']);
-          this_report.program_totals[program['name']]['off'] += parseFloat(program['off']);
-        });
+        if (shift['programs']) {
+          shift['programs'].forEach(function(program) {
+            if (this_report.program_totals[program['name']] == undefined) {
+              programs.push(program['name']);
+              this_report.program_totals[program['name']] = {"delivered": 0, "user_off": 0, "tuning": 0, "config_changes": 0, "down": 0, "off": 0};
+            }
+            this_report.program_totals[program['name']]['delivered'] += parseFloat(program['delivered']);
+            this_report.program_totals[program['name']]['user_off'] += parseFloat(program['user_off']);
+            this_report.program_totals[program['name']]['tuning'] += parseFloat(program['tuning']);
+            this_report.program_totals[program['name']]['config_changes'] += parseFloat(program['config_changes']);
+            this_report.program_totals[program['name']]['down'] += parseFloat(program['down']);
+            this_report.program_totals[program['name']]['off'] += parseFloat(program['off']);
+          });
+        }
       });
     });
   
