@@ -4,7 +4,7 @@ from app import app, db, models
 
 @app.route('/')
 def root_index():
-	return redirect(url_for('report_index'))
+  return redirect(url_for('report_index'))
   
 @app.route('/reports/')
 def report_index():
@@ -25,11 +25,10 @@ def new_report():
   
 @app.route('/create/', methods=['POST'])
 def create_report():
-  
-  print(request.form)
   report = models.Report()
   db.session.add(report)
   try:
+    print("Creating new report.")
     report.from_form(request.form)
     db.session.commit()
   except:
@@ -51,15 +50,8 @@ def update_report(reportid = None):
   report = db.session.query(models.Report).get(reportid)
   if report == None:
     abort(404)
+  print("Updating report {0}".format(reportid))
   report.from_form(request.form)
   db.session.commit()
   flash(Markup('Report saved. <a href="' + url_for('show_report', reportid = report.id) + '">Click here to view it.</a>'))
   return redirect(url_for('report_index'))
-  
-  
-  #try:
-  #  report.from_form(request.form)
-  #  db.session.commit()
-  #except:
-  #  db.session.rollback()
-  #  raise

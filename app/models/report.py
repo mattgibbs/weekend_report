@@ -29,6 +29,8 @@ class Report(db.Model):
     return report_items
   
   def from_form(self, form):
+    print("About to save report from the following form data:")
+    print(request.form)
     #Parse the start time string and convert to UTC before storing it.
     local_start = parser.parse(form['start'], ignoretz = True)
     local_start = local_start.replace(hour=8)
@@ -81,6 +83,8 @@ class Report(db.Model):
         if note_text:
           note.program = prog
           note.text = note_text
+        else:
+          print("No text in note {0}".format(other_note_number))
           
       new_downtime = DowntimeData()
       prog.downtime_data = None
