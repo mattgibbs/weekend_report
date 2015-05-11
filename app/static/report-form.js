@@ -268,6 +268,7 @@ Program.prototype.setid = function(newid) {
   //The stuff we do to the note inputs (next three lines) is only correct if this is a new program.  Luckily that is the only time setid is called.
   var new_note_id = "new" + Date.now();
   $(this.element).find('input.note_id').attr("value", new_note_id);
+  $(this.element).find('input.note_id').attr("name", "program[" + newid + "]note");
   $(this.element).find('input.other_note').attr("name", "program[" + newid + "]note[" + new_note_id +"]-text");
   $(this.element).find('input.downtime').attr("name", "downtime-" + newid);
   $(this.element).find('input.config_changes').attr("name", "config_changes-" + newid);
