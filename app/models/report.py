@@ -120,13 +120,15 @@ class Report(db.Model):
         plot = HistoryPlot.query.get(plotid)
       except ValueError:
         pass
-        
+      
+      #If the user doesn't specify a PV, assume they don't want a plot at all.  
+      if not form['pv-' + plot_number]:
+        continue  
+      
       if not plot:
         plot = HistoryPlot()
         
       plot.report = self
-      if not form['pv-' + plot_number]:
-        continue
       plot.pv = form['pv-' + plot_number]
       plot.title = form['plot-title-' + plot_number]
       
