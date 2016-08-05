@@ -14,8 +14,8 @@ function makePie(element, dataset, w, h) {
   //Easy colors accessible via a 10-step ordinal scale
   //var color = d3.scale.category10();
   var color = d3.scale.ordinal()
-                .domain(["Downtime", "Config Changes", "Delivered"])
-                .range(["#fc8d59", "#fee090", "#91bfdb"])
+                .domain(["Downtime", "Config Changes", "Delivered", "Tuning"])
+                .range(["#d95f02", "#7570b3", "#1b9e77", "#e7298a"])
   //Create SVG element
   var svg = d3.select(element)
   			.append("svg")
@@ -106,7 +106,7 @@ function makePie(element, dataset, w, h) {
   var legendRectSize = 12;
   var legendSpacing = 4;
   var legend = svg.selectAll('.legend')
-                  .data(["Downtime", "Config Changes", "Delivered"])
+                  .data(["Downtime", "Config Changes", "Delivered", "Tuning"])
                   .enter()
                   .append('g')
                   .attr('class','legend')

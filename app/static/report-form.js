@@ -273,6 +273,7 @@ Program.prototype.setid = function(newid) {
   $(this.element).find('input.downtime').attr("name", "downtime-" + newid);
   $(this.element).find('input.config_changes').attr("name", "config_changes-" + newid);
   $(this.element).find('input.delivered').attr("name", "delivered-" + newid);
+  $(this.element).find('input.tuning').attr("name", "tuning-" + newid);
 };
 
 Program.prototype.setDowntimeData = function(data) {
@@ -518,6 +519,7 @@ var DowntimeData = function(elem) {
   this.downtime = 0.0;
   this.configChanges = 0.0;
   this.delivered = 0.0;
+  this.tuning = 0.0;
   this.element = elem;
 };
 
@@ -533,11 +535,16 @@ DowntimeData.prototype.setDelivered = function(delivered) {
   this.delivered = delivered;
 };
 
+DowntimeData.prototype.setTuning = function(tuning) {
+  this.tuning = tuning;
+}
+
 DowntimeData.prototype.readFromElement = function() {
   var elem = this.element;
   this.downtime = parseFloat($(elem).find('input.downtime').val());
   this.configChanges = parseFloat($(elem).find('input.config_changes').val());
   this.delivered = parseFloat($(elem).find('input.delivered').val());
+  this.tuning = parseFloat($(elem).find('input.tuning').val());
 };
 
 $( window ).load(function() {
@@ -632,6 +639,7 @@ $( window ).load(function() {
     $(this).parent().parent().find('input.downtime').val(totals['down'].toFixed(1));
     $(this).parent().parent().find('input.config_changes').val(totals['config_changes'].toFixed(1));
     $(this).parent().parent().find('input.delivered').val(totals['delivered'].toFixed(1));
+    $(this).parent().parent().find('input.tuning').val(totals['tuning'].toFixed(1));
   });
   
   $('input#start').on('change', function() {
