@@ -13,6 +13,9 @@ class Program(db.Model):
   
   def name_without_whitespace(self):
     return ''.join(self.name.split())
-    
+   
+	def tag_id(self):
+		return "p" + str(self.id) 
+	 
   def __repr__(self):
     return "<Program id: {0} name: {1}>".format(self.id, self.name)

@@ -21,6 +21,9 @@ class HistoryPlot(db.Model):
       
   def name_without_whitespace(self):
     return ''.join(self.name.split())
+		
+	def tag_id(self):
+		return "hp" + str(self.id)
     
   def __repr__(self):
     return "<HistoryPlot id: {0} report: {1}".format(self.id, self.report)
