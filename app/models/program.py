@@ -16,11 +16,11 @@ class Program(db.Model):
    
   def tag_id(self):
     return "p" + str(self.id)
-		
-	def has_downtime_data(self):
-		if self.downtime_data.is_empty():
-			return False
-		return True
+    
+  def has_downtime_data(self):
+    if self.downtime_data.is_empty():
+      return False
+    return True
    
   def __repr__(self):
     return "<Program id: {0} name: {1}>".format(self.id, self.name)
