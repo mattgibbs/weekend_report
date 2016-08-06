@@ -8,7 +8,7 @@ function makePie(element, dataset, w, h) {
           .innerRadius(radius * 0.9)
           .outerRadius(radius * 0.9);
           
-  var pie = d3.layout.pie()
+  var pie = d3.pie()
               .sort(null)
               .value(function(d) { return d.value; })
               .padAngle(0.5*Math.PI/180);
