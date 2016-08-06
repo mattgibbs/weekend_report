@@ -1,10 +1,10 @@
 function makePie(element, dataset, w, h) {
   var margin = 30;
   var radius = Math.min(w, h) / 2;
-  var arc = d3.svg.arc()
+  var arc = d3.arc()
   				.innerRadius(radius * 0.8)
   				.outerRadius(radius * 0.4);
-  var outerArc = d3.svg.arc()
+  var outerArc = d3.arc()
           .innerRadius(radius * 0.9)
           .outerRadius(radius * 0.9);
           
