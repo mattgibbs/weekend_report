@@ -17,7 +17,7 @@ function makePie(element, dataset, w, h) {
   
   //Easy colors accessible via a 10-step ordinal scale
   //var color = d3.scale.category10();
-  var color = d3.scale.ordinal()
+  var color = d3.scaleOrdinal()
                 .domain(["Downtime", "Config Changes", "Delivered", "Tuning"])
                 .range(["#d95f02", "#7570b3", "#1b9e77", "#e7298a"])
   //Create SVG element
