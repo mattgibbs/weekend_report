@@ -23,6 +23,8 @@ function makePie(element, dataset, w, h) {
   //Create SVG element
   var svg = d3.select(element)
   			.append("svg")
+        .attr("width", w)
+        .attr("height", h)
         .append("g");
   svg.append("g").attr("class", "slices");
   svg.append("g").attr("class", "labels");
@@ -124,7 +126,7 @@ function makePie(element, dataset, w, h) {
           return d.data.value == 0 ? 0 : 0.5;
         })
         .attrTween("points", function(d) {
-          //this._current = this._current;
+          this._current = this._current;
           var interpolate = d3.interpolate(this._current, d);
           var _this = this;
           return function(t) {
