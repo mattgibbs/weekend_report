@@ -4,7 +4,7 @@ function makePie(element, dataset, w, h) {
   var arc = d3.svg.arc()
   				.innerRadius(radius * 0.8)
   				.outerRadius(radius * 0.4);
-  var outerArc = d3.swg.arc()
+  var outerArc = d3.svg.arc()
           .innerRadius(radius * 0.9)
           .outerRadius(radius * 0.9);
           
