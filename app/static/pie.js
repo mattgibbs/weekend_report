@@ -40,6 +40,8 @@ function makePie(element, dataset, w, h) {
       .sort(function(a,b) { return d3.ascending(a.title, b.title); });
   }
   
+  change(dataset);
+  
   function change(data) {
     var duration = 250;
     var data0 = svg.select(".slices").selectAll("path.slice")
