@@ -20,16 +20,17 @@ div.program-notes {
 div.downtime-chart {
 	/*padding-top: 1.2em;
   font-size: 1.5em;*/
-  path.slice {
-  	stroke-width: 2px;
-  }
+}
 
-  polyline {
-  	opacity: .3;
-  	stroke: black;
-  	stroke-width: 2px;
-  	fill: none;
-  }
+div.downtime-chart path.slice {
+	stroke-width: 2px;
+}
+
+div.downtime-chart polyline {
+	opacity: .3;
+	stroke: black;
+	stroke-width: 2px;
+	fill: none;
 }
 
 div.history-plot text.mg-marker-text {
