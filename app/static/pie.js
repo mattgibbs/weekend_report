@@ -116,9 +116,6 @@ function makePie(element, dataset, w, h) {
       polyline.enter()
         .append("polyline")
         .style("opacity", 0)
-        .style("stroke", "black")
-        .style("stroke-width", "2px")
-        .style("fill", "none")
         .each(function(d) {
           this._current = d;
         });
