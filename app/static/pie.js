@@ -95,7 +95,7 @@ function makePie(element, dataset, w, h) {
           var d2 = interpolate(t);
           _this._current = d2;
           var pos = outerArc.centroid(d2);
-          pos[0] = radius * Math.cos(d2) + (0.1 * radius * (midAngle(d2) < Math.PI ? 1 : -1));
+          pos[0] = radius * Math.cos(midAngle(d2)) + (0.1 * radius * (midAngle(d2) < Math.PI ? 1 : -1));
           //pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
           return "translate(" + pos + ")";
         };
@@ -131,7 +131,7 @@ function makePie(element, dataset, w, h) {
             var d2 = interpolate(t);
             _this._current = d2;
             var pos = outerArc.centroid(d2);
-            pos[0] = radius * Math.cos(d2) + (0.05 * radius * (midAngle(d2) < Math.PI ? 1 : -1));
+            pos[0] = radius * Math.cos(midAngle(d2)) + (0.05 * radius * (midAngle(d2) < Math.PI ? 1 : -1));
             //pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
             return [arc.centroid(d2), outerArc.centroid(d2), pos];
           };
