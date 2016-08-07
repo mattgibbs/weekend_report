@@ -33,6 +33,11 @@ div.downtime-chart polyline {
 	fill: none;
 }
 
+div.downtime-chart text {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 20px;
+}
+
 div.history-plot text.mg-marker-text {
 	font-size: 1.8em;
 }

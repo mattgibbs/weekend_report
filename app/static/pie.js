@@ -12,9 +12,6 @@ function makePie(element, dataset, w, h) {
               .sort(null)
               .value(function(d) { return d.value; })
               .padAngle(0.5*Math.PI/180);
-  
-  
-  
   //Easy colors accessible via a 10-step ordinal scale
   //var color = d3.scale.category10();
   var color = d3.scaleOrdinal()
