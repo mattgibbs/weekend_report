@@ -116,7 +116,7 @@ function makePie(element, dataset, w, h) {
       });
       text = svg.select(".labels").selectAll("text").data(pie(data), key);
       text.exit().transition().delay(duration).remove();
-      /*
+      
       var polyline = svg.select(".lines").selectAll("polyline").data(pie(was), key);
       polyline.enter()
         .append("polyline")
@@ -144,12 +144,11 @@ function makePie(element, dataset, w, h) {
         });
       polyline = svg.select(".lines").selectAll("polyline").data(pie(data), key);
       polyline.exit().transition().delay(duration).remove();
-      */
-      alpha = 0.5;
-      spacing = 20;
+      
+      var alpha = 0.5;
+      var spacing = 20;
 
       function relax() {
-          console.log("Relax!");
           var again = false;
           text.each(function (d, i) {
               var a = this;
@@ -185,6 +184,16 @@ function makePie(element, dataset, w, h) {
           // Adjust our line leaders here
           // so that they follow the labels. 
           if(again) {
+              polyline.attr("points", function(d, i) {
+                var label = text.filter(function(d2, j) { return i === j; });
+                var points = [arc.centroid(d), outerArc.centroid(d)];
+                var y = label.attr("y");
+                var x = label.attr("x");
+                if ((x !== null) && (y !== null)) {
+                  points.push([x,y]);
+                }
+                return points;
+              })
               /*
               labelElements = textLabels[0];
               textLines.attr("y2",function(d,i) {
@@ -193,15 +202,7 @@ function makePie(element, dataset, w, h) {
               });*/
               setTimeout(relax,20)
           } else {
-            var polyline = svg.select(".lines")
-            text.each(function(d) {
-              var label = d3.select(this);
-              polyline.append("polyline")
-                .attr("points", function(d2) {
-                  pos = [label.attr("x"), label.attr("y")];
-                  return [arc.centroid(d), outerArc.centroid(d), pos];
-                });
-            });
+            
           }
       }
       relax();
