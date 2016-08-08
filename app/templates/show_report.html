@@ -8,7 +8,7 @@
   {% for report_item in report.report_items() %}
     {% if report_item.__tablename__ == 'program' %}
       <div class="program-row row">
-        <div class="program-notes col-sm-8">
+        <div class="program-notes col-sm-7">
           <span class="program-name">{{ report_item.name }}</span>
           <table>
             {% if report_item.time_note %}
@@ -36,14 +36,14 @@
             {% endfor %}
           </ul>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-5">
           <div class="downtime-chart" id="{{ report_item.tag_id() }}-uptime">
             {% if report_item.has_downtime_data() %}
             <script type="text/javascript">
               //Width and height
-              var w = 450;
+              var w = 550;
               var h = 250;
-              var dataset = [ {% if report_item.downtime_data.downtime and report_item.downtime_data.downtime > 0 %}{title: "Downtime", value: {{ report_item.downtime_data.downtime }} }, {% endif %}{% if report_item.downtime_data.config_changes and report_item.downtime_data.config_changes > 0 %}{title: "Config Changes", value: {{ report_item.downtime_data.config_changes }} }, {% endif %}{% if report_item.downtime_data.delivered and report_item.downtime_data.delivered > 0 %}{title: "Delivered", value: {{ report_item.downtime_data.delivered }} }, {% endif %}{% if report_item.downtime_data.tuning and report_item.downtime_data.tuning > 0 %}{title: "Tuning", value: {{ report_item.downtime_data.tuning }} } {% endif %}];
+              var dataset = [ {% if report_item.downtime_data.delivered and report_item.downtime_data.delivered > 0 %}{title: "Delivered", value: {{ report_item.downtime_data.delivered }} }, {% endif %}{% if report_item.downtime_data.downtime and report_item.downtime_data.downtime > 0 %}{title: "Downtime", value: {{ report_item.downtime_data.downtime }} }, {% endif %}{% if report_item.downtime_data.config_changes and report_item.downtime_data.config_changes > 0 %}{title: "Config Changes", value: {{ report_item.downtime_data.config_changes }} }, {% endif %}{% if report_item.downtime_data.tuning and report_item.downtime_data.tuning > 0 %}{title: "Tuning", value: {{ report_item.downtime_data.tuning }} } {% endif %}];
               makePie('div#{{ report_item.tag_id() }}-uptime',dataset,w,h);
             </script>
             {% endif %}

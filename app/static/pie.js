@@ -1,5 +1,5 @@
 function makePie(element, dataset, w, h) {
-  var margin = 30;
+  var margin = 10;
   var radius = Math.min(w, h) / 2;
   var arc = d3.arc()
   				.innerRadius(radius * 0.8)
@@ -23,10 +23,11 @@ function makePie(element, dataset, w, h) {
         .attr("width", w)
         .attr("height", h)
         .append("g");
+  svg.attr("transform", "translate(" + w/2 +  "," + (h+margin)/2 + ")");
   svg.append("g").attr("class", "slices");
   svg.append("g").attr("class", "labels");
   svg.append("g").attr("class", "lines");
-  svg.attr("transform", "translate(" + w/2 +  "," + h/2 + ")");
+  
   var key = function(d){ return d.data.title; };
   
   function mergeWithFirstEqualZero(first, second) {
@@ -42,7 +43,7 @@ function makePie(element, dataset, w, h) {
   change(dataset);
   
   function change(data) {
-    var duration = 250;
+    var duration = 0;
     var data0 = svg.select(".slices").selectAll("path.slice")
       .data().map(function(d) { return d.data });
     if (data0.length == 0) { data0 = data; }
@@ -88,17 +89,23 @@ function makePie(element, dataset, w, h) {
       .style("opacity", function(d) {
         return d.data.value == 0 ? 0 : 1;
       })
-      .attrTween("transform", function(d) {
+      .attrTween("x", function(d) {
         var interpolate = d3.interpolate(this._current, d);
         var _this = this;
         return function(t) {
           var d2 = interpolate(t);
           _this._current = d2;
-          var pos = outerArc.centroid(d2);
-          pos[0] = radius * Math.cos(midAngle(d2)) + (0.1 * radius * (midAngle(d2) < Math.PI ? 1 : -1));
-          //pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
-          return "translate(" + pos + ")";
-        };
+          return radius * (midAngle(d2) < Math.PI ? 1 : -1);
+        }
+      })
+      .attrTween("y", function(d) {
+        var interpolate = d3.interpolate(this._current, d);
+        var _this = this;
+        return function(t) {
+          var d2 = interpolate(t);
+          _this._current = d2;
+          return outerArc.centroid(d2)[1];
+        }
       })
       .styleTween("text-anchor", function(d) {
         var interpolate = d3.interpolate(this._current, d);
@@ -109,7 +116,7 @@ function makePie(element, dataset, w, h) {
       });
       text = svg.select(".labels").selectAll("text").data(pie(data), key);
       text.exit().transition().delay(duration).remove();
-      
+      /*
       var polyline = svg.select(".lines").selectAll("polyline").data(pie(was), key);
       polyline.enter()
         .append("polyline")
@@ -131,12 +138,72 @@ function makePie(element, dataset, w, h) {
             var d2 = interpolate(t);
             _this._current = d2;
             var pos = outerArc.centroid(d2);
-            pos[0] = radius * Math.cos(midAngle(d2)) + (0.05 * radius * (midAngle(d2) < Math.PI ? 1 : -1));
-            //pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
+            pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
             return [arc.centroid(d2), outerArc.centroid(d2), pos];
           };
         });
       polyline = svg.select(".lines").selectAll("polyline").data(pie(data), key);
       polyline.exit().transition().delay(duration).remove();
+      */
+      alpha = 0.5;
+      spacing = 20;
+
+      function relax() {
+          console.log("Relax!");
+          var again = false;
+          text.each(function (d, i) {
+              var a = this;
+              var da = d3.select(a);
+              var y1 = da.attr("y");
+              text.each(function (d, j) {
+                  var b = this;
+                  // a & b are the same element and don't collide.
+                  if (a == b) { return; }
+                  var db = d3.select(b);
+                  // a & b are on opposite sides of the chart and
+                  // don't collide
+                  if (da.attr("text-anchor") != db.attr("text-anchor")) return;
+                  // Now let's calculate the distance between
+                  // these elements. 
+                  var y2 = db.attr("y");
+                  var deltaY = y1 - y2;
+            
+                  // Our spacing is greater than our specified spacing,
+                  // so they don't collide.
+                  if (Math.abs(deltaY) > spacing) return;
+            
+                  // If the labels collide, we'll push each 
+                  // of the two labels up and down a little bit.
+                  again = true;
+                  var sign = deltaY > 0 ? 1 : -1;
+                  var adjust = sign * alpha;
+                  da.attr("y",+y1 + adjust);
+                  db.attr("y",+y2 - adjust);
+              });
+          });
+          
+          // Adjust our line leaders here
+          // so that they follow the labels. 
+          if(again) {
+              /*
+              labelElements = textLabels[0];
+              textLines.attr("y2",function(d,i) {
+                  labelForLine = d3.select(labelElements[i]);
+                  return labelForLine.attr("y");
+              });*/
+              setTimeout(relax,20)
+          } else {
+            var polyline = svg.select(".lines")
+            text.each(function(d) {
+              var label = d3.select(this);
+              polyline.append("polyline")
+                .attr("points", function(d2) {
+                  pos = [label.attr("x"), label.attr("y")];
+                  return [arc.centroid(d), outerArc.centroid(d), pos];
+                });
+            });
+          }
+      }
+      relax();
   };
 }
