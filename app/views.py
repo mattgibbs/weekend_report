@@ -1,4 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request, abort, Markup
+from sqlalchemy import text
 from app import app, db, models
 
 
@@ -9,7 +10,7 @@ def root_index():
 @app.route('/reports/')
 def report_index():
   reports = db.session.query(models.Report)
-  reports = reports.order_by('end desc')
+  reports = reports.order_by(text('end desc'))
   return render_template("report_index.html", reports=reports)
 
 @app.route('/reports/<int:reportid>/', methods=['GET'])

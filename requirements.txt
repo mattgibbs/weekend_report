@@ -1,8 +1,8 @@
-flask==0.10.1
-sqlalchemy==0.9.6
-flask-wtf==0.9.5
+flask
+sqlalchemy
+flask-wtf
 flask-migrate
-flask-sqlalchemy==1.0
-requests==2.5.0
+flask-sqlalchemy
+requests
 pytz
-python-dateutil==1.5
+python-dateutil

@@ -2,11 +2,11 @@ from datetime import datetime
 from dateutil import parser
 
 from app import db, timeconverter
-from program import Program
-from note import Note
-from history_plot import HistoryPlot
-from history_event import HistoryEvent
-from downtime_data import DowntimeData
+from .program import Program
+from .note import Note
+from .history_plot import HistoryPlot
+from .history_event import HistoryEvent
+from .downtime_data import DowntimeData
 
 class Report(db.Model):
   id = db.Column(db.Integer, primary_key = True)
