@@ -1,5 +1,5 @@
 <div id="heading" class="row">
-  <h3>New Weekend Report for <input id="start" name="start" type="date" placeholder="yyyy-mm-dd" size="9" value="{{ report.start.strftime('%m/%d/%Y') if report.start else '' }}"> at 8am to <input id="end" name="end" type="date" placeholder="yyyy-mm-dd" size="9" value="{{ report.end.strftime('%m/%d/%Y') if report.end else '' }}"> at 8am.{% if not report %} <a href="#" id="begin">Start</a>{% endif %}</h3>
+  <h3>New Weekend Report for <input id="start" name="start" type="date" placeholder="yyyy-mm-dd" size="9" value="{{ report.start.strftime('%Y-%m-%d') if report.start else '' }}"> at 8am to <input id="end" name="end" type="date" placeholder="yyyy-mm-dd" size="9" value="{{ report.end.strftime('%Y-%m-%d') if report.end else '' }}"> at 8am.{% if not report %} <a href="#" id="begin">Start</a>{% endif %}</h3>
 </div>
 <div id="report_items" class="row">
 {% if report %}
