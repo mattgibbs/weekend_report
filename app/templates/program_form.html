@@ -50,6 +50,10 @@
         <th>Delivered</th>
         <td><input class="delivered" name="delivered-{{ report_item.id if report_item else ''}}" placeholder="0.0" value="{{ report_item.downtime_data.delivered if report_item else ''}}"></td>
       </tr>
+      <tr>
+        <th>Tuning</th>
+        <td><input class="tuning" name="tuning-{{ report_item.id if report_item else ''}}" placeholder="0.0" value="{{ report_item.downtime_data.tuning if report_item else ''}}"></td>
+      </tr>
     </table>
     <span class="import-downtime" style="display: none;">Import time data from daily reports for program: 
       <select class="imported-programs">

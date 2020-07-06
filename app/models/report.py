@@ -2,11 +2,11 @@ from datetime import datetime
 from dateutil import parser
 
 from app import db, timeconverter
-from program import Program
-from note import Note
-from history_plot import HistoryPlot
-from history_event import HistoryEvent
-from downtime_data import DowntimeData
+from .program import Program
+from .note import Note
+from .history_plot import HistoryPlot
+from .history_event import HistoryEvent
+from .downtime_data import DowntimeData
 
 class Report(db.Model):
   id = db.Column(db.Integer, primary_key = True)
@@ -109,6 +109,13 @@ class Report(db.Model):
           new_downtime.delivered = None
       else:
         new_downtime.delivered = None
+      if form['tuning-' + program_number]:
+        try:
+          new_downtime.tuning = float(form['tuning-' + program_number])
+        except ValueError:
+          new_downtime.tuning = None
+      else:
+        new_downtime.tuning = None
       new_downtime.program = prog
       
     history_plots = filter(None, form.getlist('history_plot'))
