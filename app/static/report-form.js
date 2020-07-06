@@ -101,8 +101,8 @@ Report.prototype.removeHistoryPlot = function(plotid) {
 };
 
 Report.prototype.parseStartEndString = function(datestring) {
-  var dateParts = datestring.split("/");
-  return new Date(dateParts[2], (dateParts[0] - 1), dateParts[1],8);
+  var dateParts = datestring.split("-");
+  return new Date(dateParts[0], (dateParts[1] - 1), dateParts[2],8);
 };
 
 Report.prototype.makeDateString = function(date) {
@@ -111,7 +111,7 @@ Report.prototype.makeDateString = function(date) {
   var paddedMonth = (pad+month).slice(-pad.length);
   var day = date.getDate();
   var paddedDay = (pad+day).slice(-pad.length);
-  return paddedMonth + "/" + paddedDay + "/" + date.getFullYear();
+  return date.getFullYear() + "-" + paddedMonth + "-" + paddedDay;
 }
 
 Report.prototype.readFromElement = function(elem) {
