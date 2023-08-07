@@ -18,7 +18,7 @@ class Program(db.Model):
     return "p" + str(self.id)
     
   def has_downtime_data(self):
-    if self.downtime_data.is_empty():
+    if (self.downtime_data is None) or self.downtime_data.is_empty():
       return False
     return True
    
