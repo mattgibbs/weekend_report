@@ -53,7 +53,7 @@ class Report(db.Model):
       prog = Program.query.get(programid)
       if not prog:
         prog = Program()
-      
+      db.session.add(prog)     
       prog.name = form['name-' + program_number]
       prog.time_note = form['time_note-' + program_number]
       prog.config_note = form['config_note-' + program_number]
@@ -77,12 +77,12 @@ class Report(db.Model):
         #If we didn't get a note back in the query, assume that means we need to make a new note.
         if not note:
           note = Note()
-        
         note_text = form["program[{0}]note[{1}]-text".format(program_number, other_note_number)]
         #If the note from the form has no text, we just ignore it.
         if note_text:
           note.program = prog
           note.text = note_text
+          db.session.add(note)
         else:
           print("No text in note {0}".format(other_note_number))
           
@@ -117,6 +117,7 @@ class Report(db.Model):
       else:
         new_downtime.tuning = None
       new_downtime.program = prog
+      db.session.add(new_downtime)
       
     history_plots = filter(None, form.getlist('history_plot'))
     self.history_plots = []
@@ -134,10 +135,10 @@ class Report(db.Model):
       
       if not plot:
         plot = HistoryPlot()
-        
       plot.report = self
       plot.pv = form['pv-' + plot_number]
       plot.title = form['plot-title-' + plot_number]
+      db.session.add(plot)
       
       
       try:
@@ -157,7 +158,6 @@ class Report(db.Model):
           
         if not event:
           event = HistoryEvent()
-          
         event.text = form["plot[{0}]event[{1}]-text".format(plot_number, event_number)]
         if not event.text:
           continue
@@ -167,3 +167,4 @@ class Report(db.Model):
         event.history_plot = plot
         local_timestamp = parser.parse(local_timestring, ignoretz = True)
         event.timestamp = timeconverter.convert_to_UTC(local_timestamp)
+        db.session.add(event)
