@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import os
 from werkzeug.middleware.proxy_fix import ProxyFix
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -17,5 +18,6 @@ except KeyError:
 	
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 from app import models, views
