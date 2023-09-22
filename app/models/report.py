@@ -116,6 +116,20 @@ class Report(db.Model):
           new_downtime.tuning = None
       else:
         new_downtime.tuning = None
+      if form['user_off-' + program_number]:
+        try:
+          new_downtime.user_off = float(form['user_off-' + program_number])
+        except ValueError:
+          new_downtime.user_off = None
+      else:
+        new_downtime.user_off = None
+      if form['off-' + program_number]:
+        try:
+          new_downtime.off = float(form['off-' + program_number])
+        except ValueError:
+          new_downtime.off = None
+      else:
+        new_downtime.off = None
       new_downtime.program = prog
       db.session.add(new_downtime)
       

@@ -54,6 +54,14 @@
         <th>Tuning</th>
         <td><input class="tuning" name="tuning-{{ report_item.id if report_item else ''}}" placeholder="0.0" value="{{ report_item.downtime_data.tuning if report_item else ''}}"></td>
       </tr>
+      <tr>
+        <th>User Off</th>
+        <td><input class="user_off" name="user_off-{{ report_item.id if report_item else ''}}" placeholder="0.0" value="{{ report_item.downtime_data.user_off if report_item else ''}}"></td>
+      </tr>
+      <tr>
+        <th>Sched. Off</th>
+        <td><input class="off" name="off-{{ report_item.id if report_item else ''}}" placeholder="0.0" value="{{ report_item.downtime_data.off if report_item else ''}}"></td>
+      </tr>
     </table>
     <span class="import-downtime" style="display: none;">Import time data from daily reports for program: 
       <select class="imported-programs">

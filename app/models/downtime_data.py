@@ -7,9 +7,12 @@ class DowntimeData(db.Model):
   config_changes = db.Column(db.Float())
   delivered = db.Column(db.Float())
   tuning = db.Column(db.Float())
+  user_off = db.Column(db.Float())
+  off = db.Column(db.Float())
+  
   
   def is_empty(self):
-    if self.downtime or self.config_changes or self.delivered or self.tuning:
+    if self.downtime or self.config_changes or self.delivered or self.tuning or self.user_off or self.off:
       return False
     return True
   

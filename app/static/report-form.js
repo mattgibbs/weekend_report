@@ -274,6 +274,8 @@ Program.prototype.setid = function(newid) {
   $(this.element).find('input.config_changes').attr("name", "config_changes-" + newid);
   $(this.element).find('input.delivered').attr("name", "delivered-" + newid);
   $(this.element).find('input.tuning').attr("name", "tuning-" + newid);
+  $(this.element).find('input.user_off').attr("name", "user_off-" + newid);
+  $(this.element).find('input.off').attr("name", "off-" + newid);
 };
 
 Program.prototype.setDowntimeData = function(data) {
@@ -520,6 +522,8 @@ var DowntimeData = function(elem) {
   this.configChanges = 0.0;
   this.delivered = 0.0;
   this.tuning = 0.0;
+  this.user_off = 0.0;
+  this.off = 0.0;
   this.element = elem;
 };
 
@@ -539,12 +543,22 @@ DowntimeData.prototype.setTuning = function(tuning) {
   this.tuning = tuning;
 }
 
+DowntimeData.prototype.setUserOff = function(user_off) {
+  this.user_off = user_off;
+}
+
+DowntimeData.prototype.setOff = function(off) {
+  this.off = off;
+}
+
 DowntimeData.prototype.readFromElement = function() {
   var elem = this.element;
   this.downtime = parseFloat($(elem).find('input.downtime').val());
   this.configChanges = parseFloat($(elem).find('input.config_changes').val());
   this.delivered = parseFloat($(elem).find('input.delivered').val());
   this.tuning = parseFloat($(elem).find('input.tuning').val());
+  this.user_off = parseFloat($(elem).find('input.user_off').val());
+  this.off = parseFloat($(elem).find('input.off').val());
 };
 
 $( window ).load(function() {
@@ -640,6 +654,8 @@ $( window ).load(function() {
     $(this).parent().parent().find('input.config_changes').val(totals['config_changes'].toFixed(1));
     $(this).parent().parent().find('input.delivered').val(totals['delivered'].toFixed(1));
     $(this).parent().parent().find('input.tuning').val(totals['tuning'].toFixed(1));
+    $(this).parent().parent().find('input.user_off').val(totals['user_off'].toFixed(1));
+    $(this).parent().parent().find('input.off').val(totals['off'].toFixed(1));
   });
   
   $('input#start').on('change', function() {
