@@ -180,7 +180,6 @@ Report.prototype.importDailyReports = function() {
   var this_report = this;
   var startDate = this.startDate
   var endDate = this.endDate
-  startDate.setDate(startDate.getDate() + 1);
   //Get all the daily reports that fall within our weekend report range.
   console.log("https://mccelog.slac.stanford.edu/elog/dev/mgibbs/mcc_shift_sum/json_report.php?start_date=" + startDate.toISOString() + "&end_date=" + endDate.toISOString());
   $.ajax({
